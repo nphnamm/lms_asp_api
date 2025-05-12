@@ -1,0 +1,12 @@
+D:\Github\LMS-ASP_API\src\Domain\bin\Debug\net8.0\Domain.deps.json
+D:\Github\LMS-ASP_API\src\Domain\bin\Debug\net8.0\Domain.dll
+D:\Github\LMS-ASP_API\src\Domain\bin\Debug\net8.0\Domain.pdb
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.csproj.AssemblyReference.cache
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.dll
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\refint\Domain.dll
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.pdb
+D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\ref\Domain.dll

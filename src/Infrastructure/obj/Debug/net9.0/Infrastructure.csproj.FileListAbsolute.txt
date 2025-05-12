@@ -1,0 +1,17 @@
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.csproj.AssemblyReference.cache
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.AssemblyInfoInputs.cache
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.AssemblyInfo.cs
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.csproj.CoreCompileInputs.cache
+D:\Github\LMS-ASP_API\src\Infrastructure\bin\Debug\net9.0\Infrastructure.deps.json
+D:\Github\LMS-ASP_API\src\Infrastructure\bin\Debug\net9.0\Infrastructure.dll
+D:\Github\LMS-ASP_API\src\Infrastructure\bin\Debug\net9.0\Infrastructure.pdb
+D:\Github\LMS-ASP_API\src\Infrastructure\bin\Debug\net9.0\Domain.dll
+D:\Github\LMS-ASP_API\src\Infrastructure\bin\Debug\net9.0\Domain.pdb
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastr.15EFFBFE.Up2Date
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.dll
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\refint\Infrastructure.dll
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.pdb
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\ref\Infrastructure.dll
+D:\Github\LMS-ASP_API\src\Infrastructure\bin\Debug\net9.0\Infrastructure.runtimeconfig.json
+D:\Github\LMS-ASP_API\src\Infrastructure\obj\Debug\net9.0\Infrastructure.genruntimeconfig.cache
