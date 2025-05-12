@@ -5,11 +5,11 @@ namespace Presentation.Models;
 
 public class CreateLessonRequest
 {
-    public string Title { get; set; }
-    public string Content { get; set; }
+    public required string Title { get; set; }
+    public required string Content { get; set; }
     public int Order { get; set; }
     public LessonType Type { get; set; }
     public List<QuestionDto> Questions { get; set; } = new();
     public List<OptionDto> Options { get; set; } = new();
-    public string CorrectAnswer { get; set; }
+    public required string CorrectAnswer { get; set; }
 } 

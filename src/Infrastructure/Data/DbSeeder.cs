@@ -18,6 +18,8 @@ public static class DbSeeder
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         // Remove old data
+        context.Options.RemoveRange(context.Options);
+        context.Questions.RemoveRange(context.Questions);
         context.Lessons.RemoveRange(context.Lessons);
         context.Enrollments.RemoveRange(context.Enrollments);
         context.Courses.RemoveRange(context.Courses);
@@ -132,8 +134,7 @@ public static class DbSeeder
                 CourseId = course.Id,
                 CreatedAt = DateTime.UtcNow,
                 IsPublished = true,
-                Type = LessonType.Text,
-                CorrectAnswer = "This is a text lesson, no correct answer needed"
+                Type = 1,
             };
 
             var lesson2 = new Lesson
@@ -145,12 +146,55 @@ public static class DbSeeder
                 CourseId = course.Id,
                 CreatedAt = DateTime.UtcNow,
                 IsPublished = true,
-                Type = LessonType.Text,
-                CorrectAnswer = "This is a text lesson, no correct answer needed"
+                Type = 3
             };
 
             context.Lessons.AddRange(lesson1, lesson2);
             await context.SaveChangesAsync();
+
+            // Add questions and options for the MultipleChoice lesson
+            if (lesson2.Type == 3)
+            {
+                var question1 = new Question
+                {
+                    Id = Guid.NewGuid(),
+                    LessonId = lesson2.Id,
+                    Text = "What is 2 + 2?",
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var options = new[]
+                {
+                    new Option
+                    {
+                        Id = Guid.NewGuid(),
+                        Text = "3",
+                        IsCorrect = false,
+                        Order = 1,
+                        QuestionId = question1.Id
+                    },
+                    new Option
+                    {
+                        Id = Guid.NewGuid(),
+                        Text = "4",
+                        IsCorrect = true,
+                        Order = 2,
+                        QuestionId = question1.Id
+                    },
+                    new Option
+                    {
+                        Id = Guid.NewGuid(),
+                        Text = "5",
+                        IsCorrect = false,
+                        Order = 3,
+                        QuestionId = question1.Id
+                    }
+                };
+
+                context.Questions.Add(question1);
+                context.Options.AddRange(options);
+                await context.SaveChangesAsync();
+            }
 
             // Add sample enrollment
             var enrollment = new Enrollment
@@ -166,4 +210,4 @@ public static class DbSeeder
             await context.SaveChangesAsync();
         }
     }
-} 
+}

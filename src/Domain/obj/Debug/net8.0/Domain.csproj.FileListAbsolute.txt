@@ -10,3 +10,16 @@ D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.dll
 D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\refint\Domain.dll
 D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\Domain.pdb
 D:\Github\LMS-ASP_API\src\Domain\obj\Debug\net8.0\ref\Domain.dll
+E:\Nam\lms_asp_api\src\Domain\bin\Debug\net8.0\Domain.deps.json
+E:\Nam\lms_asp_api\src\Domain\bin\Debug\net8.0\Domain.dll
+E:\Nam\lms_asp_api\src\Domain\bin\Debug\net8.0\Domain.pdb
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.csproj.AssemblyReference.cache
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.sourcelink.json
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.dll
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\refint\Domain.dll
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\Domain.pdb
+E:\Nam\lms_asp_api\src\Domain\obj\Debug\net8.0\ref\Domain.dll

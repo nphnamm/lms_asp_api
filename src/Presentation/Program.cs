@@ -1,14 +1,19 @@
+using Domain.Common.Interfaces;
+using Domain.Entities;
+using Infrastructure.Data;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Infrastructure.Data;
-using Domain.Entities;
-using Application;
-using Infrastructure;
-using Domain.Common.Interfaces;
-using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using Presentation.Middleware;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +32,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
@@ -38,15 +44,24 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found in configuration")))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+
+    // Map "role" claim to the default role claim type
+    options.TokenValidationParameters.RoleClaimType = ClaimTypes.Role;
 });
 
-// Add Authorization
-builder.Services.AddAuthorization();
-
 // Add Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new FlexibleLessonTypeEnumConverter());
+    });
+
+// Swagger
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddSwaggerGen(p => { p.EnableAnnotations(); });
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.AssemblyReference).Assembly));
@@ -54,12 +69,91 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Appli
 // Add TokenService
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+// add enum converter
+
 var app = builder.Build();
 
-// Seed the database
-// await DbSeeder.SeedData(app.Services);
-
+// Add authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Add user context middleware
+app.UseUserContext();
+
+// Seed the database
+// 
+if (args.Contains("--seed"))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+
+        try
+        {
+            // Call your seeding logic here
+            await DbSeeder.SeedData(app.Services);
+            Console.WriteLine("Database seeding completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+        }
+    }
+
+    // Exit the application after seeding
+    return;
+}
+
+app.Use(async (context, next) =>
+{
+    var user = context.User;
+
+    Console.WriteLine($"User: {user.Identity.Name}");
+    foreach (var claim in user.Claims)
+    {
+        Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+    }
+
+    if (user.Identity?.IsAuthenticated == true)
+    {
+        Console.WriteLine($"User: {user.Identity.Name}");
+        foreach (var claim in user.Claims)
+        {
+            Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("User is not authenticated.");
+    }
+    await next();
+});
+
 app.MapControllers();
 app.Run();
+
+// Custom converter for LessonType to accept both string and number
+public class FlexibleLessonTypeEnumConverter : JsonConverter<LessonType>
+{
+    public override LessonType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.Number && reader.TryGetInt32(out int intValue))
+        {
+            return (LessonType)intValue;
+        }
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var str = reader.GetString();
+            if (Enum.TryParse<LessonType>(str, true, out var result))
+                return result;
+            if (int.TryParse(str, out int intStrValue))
+                return (LessonType)intStrValue;
+        }
+        throw new JsonException($"Unable to convert value to LessonType: {reader.GetString()}");
+    }
+
+    public override void Write(Utf8JsonWriter writer, LessonType value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToString());
+    }
+}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Domain.Enums;
 
 namespace Domain.Entities;
 
@@ -9,6 +10,8 @@ public class Question
     public string Text { get; set; }
     public Guid LessonId { get; set; }
     public Lesson Lesson { get; set; }
+    public QuestionType Type { get; set; }
+    public int Order { get; set; }
     public ICollection<Option> Options { get; set; } = new List<Option>();
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

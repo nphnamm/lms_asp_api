@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Application.Common.Exceptions;
 using Application.Common.Models;
 using Application.Users.Commands;
-using Application.Common.Exceptions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 // Presentation/Controllers/AuthController.cs
 [ApiController]
@@ -12,12 +10,12 @@ using Application.Common.Exceptions;
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
-    
+
     public AuthController(IMediator mediator)
     {
         _mediator = mediator;
     }
-    
+
     [HttpPost("login")]
     public async Task<ActionResult<GeneralServiceResponseDto<AuthenticationResponse>>> Login(AuthenticateUserCommand command)
     {
@@ -35,12 +33,12 @@ public class AuthController : ControllerBase
             ));
         }
     }
-    
+
     [HttpPost("register")]
     public async Task<ActionResult<GeneralServiceResponseDto<UserResponse>>> Register(RegisterUserCommand command)
     {
         var result = await _mediator.Send(command);
-        
+
         if (!result.IsSuccess)
         {
             return BadRequest(GeneralServiceResponseDto<UserResponse>.Failure(
@@ -49,10 +47,10 @@ public class AuthController : ControllerBase
                 new List<string> { result.Error }
             ));
         }
-        
+
         return Ok(GeneralServiceResponseDto<UserResponse>.Success(result.Data, "Registration successful"));
     }
-    
+
     [HttpPost("refresh-token")]
     public async Task<ActionResult<GeneralServiceResponseDto<AuthenticationResponse>>> RefreshToken(RefreshTokenCommand command)
     {

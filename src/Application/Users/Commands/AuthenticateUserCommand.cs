@@ -35,7 +35,7 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
         if (!isValidPassword) throw new UnauthorizedException("Invalid credentials");
         
         // Bước 3: Tạo tokens
-        var accessToken = _tokenService.GenerateAccessToken(user);
+        var accessToken = await _tokenService.GenerateAccessToken(user);
         var refreshToken = _tokenService.GenerateRefreshToken();
         
         // Bước 4: Lưu refresh token vào user

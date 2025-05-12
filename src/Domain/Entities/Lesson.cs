@@ -14,10 +14,9 @@ public class Lesson
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsPublished { get; set; }
-    public LessonType Type { get; set; }
-    
+    public int Type { get; set; }
+
     // Depending on lesson type, these may be used
     public ICollection<Question> Questions { get; set; } = new List<Question>();
-    public string CorrectAnswer { get; set; }
     public ICollection<Option> Options { get; set; } = new List<Option>();
 }

@@ -1,4 +1,3 @@
-// Infrastructure/Data/ApplicationDbContext.cs
 using System;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,44 +16,44 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Course> Courses { get; set; }
     public DbSet<Lesson> Lessons { get; set; }
     public DbSet<Enrollment> Enrollments { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Option> Options { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        // Configure Identity tables
         builder.Entity<User>(e =>
         {
             e.ToTable("Users");
         });
-            //2
-            builder.Entity<IdentityUserClaim<Guid>>(e =>
-            {
-                e.ToTable("UserClaims");
-            });
-            //3
-            builder.Entity<IdentityUserLogin<Guid>>(e =>
-            {
-                e.ToTable("UserLogins");
-            });
-            //4
-            builder.Entity<IdentityUserToken<Guid>>(e =>
-            {
-                e.ToTable("UserTokens");
-            });
-            //5
-            builder.Entity<IdentityRole<Guid>>(e =>
-            {
-                e.ToTable("Roles");
-            });
-            //6
-            builder.Entity<IdentityRoleClaim<Guid>>(e =>
-            {
-                e.ToTable("RoleClaims");
-            });
-            //7
-            builder.Entity<IdentityUserRole<Guid>>(e =>
-            {
-                e.ToTable("UserRoles");
-            });
+        builder.Entity<IdentityUserClaim<Guid>>(e =>
+        {
+            e.ToTable("UserClaims");
+        });
+        builder.Entity<IdentityUserLogin<Guid>>(e =>
+        {
+            e.ToTable("UserLogins");
+        });
+        builder.Entity<IdentityUserToken<Guid>>(e =>
+        {
+            e.ToTable("UserTokens");
+        });
+        builder.Entity<IdentityRole<Guid>>(e =>
+        {
+            e.ToTable("Roles");
+        });
+        builder.Entity<IdentityRoleClaim<Guid>>(e =>
+        {
+            e.ToTable("RoleClaims");
+        });
+        builder.Entity<IdentityUserRole<Guid>>(e =>
+        {
+            e.ToTable("UserRoles");
+        });
+
+        // Configure Course
         builder.Entity<Course>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -64,6 +63,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
+        // Configure Lesson
         builder.Entity<Lesson>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -73,6 +73,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // Configure Enrollment
         builder.Entity<Enrollment>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -84,6 +85,26 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
                 .WithMany()
                 .HasForeignKey(e => e.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure Question
+        builder.Entity<Question>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(e => e.Lesson)
+                .WithMany(l => l.Questions)
+                .HasForeignKey(e => e.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configure Option
+        builder.Entity<Option>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(e => e.Question)
+                .WithMany(q => q.Options)
+                .HasForeignKey(e => e.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

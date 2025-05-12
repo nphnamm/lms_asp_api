@@ -36,6 +36,9 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
         
         if (!result.Succeeded)
             return Result<UserResponse>.Failure(string.Join(", ", result.Errors.Select(e => e.Description)));
+
+        // Assign Instructor role
+        await _userManager.AddToRoleAsync(user, "Instructor");
         
         // Trả về thông tin user đã tạo
         return Result<UserResponse>.Success(new UserResponse
