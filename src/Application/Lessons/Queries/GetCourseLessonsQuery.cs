@@ -18,19 +18,11 @@ public class GetCourseLessonsQueryHandler : IRequestHandler<GetCourseLessonsR, S
     public async Task<SingleResponse> Handle(GetCourseLessonsR request, CancellationToken cancellationToken)
     {
         var res = new SingleResponse();
-        var query = _context.Lessons
+        var lessons = await _context.Lessons
             .Where(l => l.CourseId == request.CourseId)
-            .AsQueryable();
-
-        if (!request.IncludeUnpublished)
-        {
-            query = query.Where(l => l.IsPublished);
-        }
-
-        var lessons = await query
             .OrderBy(l => l.Order)
             .ToListAsync(cancellationToken);
 
-        return res.SetSuccess(lessons);
+        return res.SetSuccess(lessons.Select(l => l.ToViewDto()).ToList());
     }
 }

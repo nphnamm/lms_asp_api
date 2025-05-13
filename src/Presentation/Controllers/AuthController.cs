@@ -1,5 +1,4 @@
-using Application.Common.Exceptions;
-using Application.Common.Models;
+
 using Application.Request;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +18,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] AuthenticateUserR command)
     {
-    
+
         var result = await _mediator.Send(command);
         return Ok(result);
 
@@ -30,10 +29,13 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register(RegisterUserR command)
     {
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
 
-        if (!result.Succeeded)
-            return BadRequest(result.Message);
-
+    [HttpPost("verify-otp")]
+    public async Task<IActionResult> VerifyOtp(VerifyOtpR command)
+    {
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
 

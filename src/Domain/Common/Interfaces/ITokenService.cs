@@ -6,4 +6,5 @@ public interface ITokenService
 {
     Task<string> GenerateAccessToken(User user);
     string GenerateRefreshToken();
+    Task<string> GenerateOtpToken(User user);
 } 

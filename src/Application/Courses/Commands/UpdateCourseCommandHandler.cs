@@ -14,24 +14,23 @@ public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseR, SingleR
     private readonly ApplicationDbContext _context;
 
     public UpdateCourseCommandHandler(ApplicationDbContext context)
-    {   
+    {
         _context = context;
     }
 
     public async Task<SingleResponse> Handle(UpdateCourseR request, CancellationToken cancellationToken)
     {
         var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
-        
+     
         if (course == null)
             return new SingleResponse().SetError("Course not found");
 
-        course.Title = request.Title;
-        course.Description = request.Description;
-        course.Price = request.Price;
-        course.IsPublished = request.IsPublished;
-        course.UpdatedAt = DateTime.UtcNow;
+        course.Update(request.Title, request.Description, request.Price, request.IsPublished);
 
         await _context.SaveChangesAsync(cancellationToken);
-        return new SingleResponse().SetSuccess(true);
+
+        return new SingleResponse().SetSuccess(course.ToViewDto());
+
+
     }
-} 
+}

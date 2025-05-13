@@ -21,16 +21,7 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseR, SingleR
     public async Task<SingleResponse> Handle(CreateCourseR request, CancellationToken cancellationToken)
     {
         var res = new SingleResponse();
-        var course = new Course
-        {
-            Id = Guid.NewGuid(),
-            Title = request.Title,
-            Description = request.Description,
-            Price = request.Price,
-            InstructorId = request.InstructorId,
-            CreatedAt = DateTime.UtcNow,
-            IsPublished = false
-        };
+        var course = Course.Create(request.InstructorId, request.Title, request.Description, request.Price, true);
 
         _context.Courses.Add(course);
         await _context.SaveChangesAsync(cancellationToken);

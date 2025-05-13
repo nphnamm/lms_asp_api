@@ -29,119 +29,46 @@ public class QuestionsController : BaseController
     }
 
     [HttpGet("lesson/{lessonId}")]
-    public async Task<ActionResult<List<QuestionDto>>> GetLessonQuestions(Guid lessonId)
+    public async Task<IActionResult> GetLessonQuestions(Guid lessonId)
     {
         // Get lesson to check access
-        var lesson = await _mediator.Send(new GetLessonR { Id = lessonId });
-        if (lesson == null)
+        var lessonQuery = new GetLessonR { Id = lessonId };
+        var lessonResult = await _mediator.Send(lessonQuery);
+        
+        if (lessonResult == null)
             return NotFound();
 
-        // Get course to check access
-        // var course = await _mediator.Send(new GetCourseQuery { Id = lesson.CourseId });
-        // if (course == null)
-        //     return NotFound();
-
-        // Only instructors and course owners can see questions for unpublished lessons
-        // if (!lesson.IsPublished && !IsInstructor && course.InstructorId != CurrentUserId)
-        //     return Forbid();
-
-        // For published lessons, allow access to instructors, course owners, and enrolled students
-        // if (!IsInstructor && course.InstructorId != CurrentUserId)
-        // {
-        //     // TODO: Add check for student enrollment
-        //     // For now, only allow access to questions in published lessons
-        //     if (!lesson.IsPublished)
-        //         return Forbid();
-        // }
-
         var query = new GetLessonQuestionsR { LessonId = lessonId };
-        var questions = await _mediator.Send(query);
-        return Ok(questions);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<QuestionDto>> GetQuestion(Guid id)
+    public async Task<IActionResult> GetQuestion(Guid id)
     {
         var query = new GetQuestionR { Id = id };
-        var question = await _mediator.Send(query);
-
-        if (question == null)
+        var result = await _mediator.Send(query);
+        
+        if (result == null)
             return NotFound();
 
-        // Get lesson to check access
-        // var lesson = await _mediator.Send(new GetLessonR { Id = question.Data.LessonId });
-        // if (lesson == null)
-        //     return NotFound();
-
-        // Get course to check access
-        // var course = await _mediator.Send(new GetCourseR { Id = lesson.CourseId });
-        // if (course == null)
-        //     return NotFound();
-
-        // Only instructors and course owners can see questions for unpublished lessons
-        // if (!lesson.IsPublished && !IsInstructor && course.InstructorId != CurrentUserId)
-        //     return Forbid();
-
-        // For published lessons, allow access to instructors, course owners, and enrolled students
-        // if (!IsInstructor && course.InstructorId != CurrentUserId)
-        // {
-        //     // TODO: Add check for student enrollment
-        //     // For now, only allow access to questions in published lessons
-        //     if (!lesson.IsPublished)
-        //         return Forbid();
-        // }
-
-        return Ok(question);
+        return Ok(result);
     }
 
     [HttpPost]
     [Authorize(Roles = "Instructor")]
-    public async Task<ActionResult<Guid>> CreateQuestion(CreateQuestionR command)
+    public async Task<IActionResult> CreateQuestion(CreateQuestionR command)
     {
-        _logger.LogInformation("User ID: {UserId}, IsInstructor: {IsInstructor}", CurrentUserId, IsInstructor);
-        _logger.LogInformation("User claims: {Claims}", string.Join(", ", User.Claims.Select(c => $"{c.Type}: {c.Value}")));
-
-        // Get lesson to check course ownership
-        var lesson = await _mediator.Send(new GetLessonR { Id = command.LessonId });
-        if (lesson == null)
-            return NotFound();
-
-        // Get course to check ownership
-        // var course = await _mediator.Send(new GetCourseR { Id = lesson.CourseId });
-        // if (course == null)
-        //     return NotFound();
-
-        // Only the course owner can add questions
-        // if (course.InstructorId != CurrentUserId)
-        //     return Forbid();
-
-        var questionId = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetQuestion), new { id = questionId }, questionId);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPost("multiple")]
     [Authorize(Roles = "Instructor")]
-    public async Task<ActionResult<List<Guid>>> CreateMultipleQuestions(CreateMultipleQuestionsCommand command)
+    public async Task<IActionResult> CreateMultipleQuestions(CreateMultipleQuestionsCommand command)
     {
-        _logger.LogInformation("User ID: {UserId}, IsInstructor: {IsInstructor}", CurrentUserId, IsInstructor);
-        _logger.LogInformation("User claims: {Claims}", string.Join(", ", User.Claims.Select(c => $"{c.Type}: {c.Value}")));
-
-        // Get lesson to check course ownership
-        var lesson = await _mediator.Send(new GetLessonR { Id = command.LessonId });
-        if (lesson == null)
-            return NotFound();
-
-        // Get course to check ownership
-        // var course = await _mediator.Send(new GetCourseR { Id = lesson.CourseId });
-        // if (course == null)
-        //     return NotFound();
-
-        // Only the course owner can add questions
-        // if (course.InstructorId != CurrentUserId)
-        //     return Forbid();
-
-        var questionIds = await _mediator.Send(command);
-        return Ok(questionIds);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPut("{id}")]
@@ -151,60 +78,16 @@ public class QuestionsController : BaseController
         if (id != command.Id)
             return BadRequest();
 
-        // Get question to check lesson ownership
-        var question = await _mediator.Send(new GetQuestionR { Id = id });
-        if (question == null)
-            return NotFound();
-
-        // Get lesson to check course ownership
-        // var lesson = await _mediator.Send(new GetLessonR { Id = question.Data.LessonId });
-        // if (lesson == null)
-        //     return NotFound();
-
-        // Get course to check ownership
-        // var course = await _mediator.Send(new GetCourseR { Id = lesson.CourseId });
-        // if (course == null)
-        //     return NotFound();
-
-        // Only the course owner can update questions
-        // if (course.InstructorId != CurrentUserId)
-        //     return Forbid();
-
-        var success = await _mediator.Send(command);
-        if (!success.Succeeded)
-            return NotFound();
-
-        return NoContent();
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Instructor")]
     public async Task<IActionResult> DeleteQuestion(Guid id)
     {
-        // Get question to check lesson ownership
-        var question = await _mediator.Send(new GetQuestionR { Id = id });
-        if (question == null)
-            return NotFound();
-
-        // Get lesson to check course ownership
-        // var lesson = await _mediator.Send(new GetLessonR { Id = question.Data.LessonId });
-        // if (lesson == null)
-        //     return NotFound();
-
-        // Get course to check ownership
-        // var course = await _mediator.Send(new GetCourseR { Id = lesson.CourseId });
-        // if (course == null)
-        //     return NotFound();
-
-        // Only the course owner can delete questions
-        // if (course.InstructorId != CurrentUserId)
-        //     return Forbid();
-
         var command = new DeleteQuestionR { Id = id };
-        var success = await _mediator.Send(command);
-        if (!success.Succeeded)
-            return NotFound();
-
-        return NoContent();
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 }

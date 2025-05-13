@@ -28,4 +28,4 @@ public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionR, Sin
         await _context.SaveChangesAsync(cancellationToken);
         return res.SetSuccess(true);
     }
-} 
+}

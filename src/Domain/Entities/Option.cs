@@ -2,7 +2,7 @@ using System;
 
 namespace Domain.Entities;
 
-public class Option
+public partial class Option
 {
     public Guid Id { get; set; }
     public string Text { get; set; }

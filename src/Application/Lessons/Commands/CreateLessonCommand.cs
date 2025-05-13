@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Domain.Entities;
 using Application.Request.Lesson;
 using Application.Common.Reponses;
+using Domain.Entities;
 
 namespace Application.Lessons.Commands;
 
@@ -21,20 +22,10 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonR, SingleR
     public async Task<SingleResponse> Handle(CreateLessonR request, CancellationToken cancellationToken)
     {
         var res = new SingleResponse();
-        var lesson = new Lesson
-        {
-            Id = Guid.NewGuid(),
-            Title = request.Title,
-            Content = request.Content,
-            Order = request.Order,
-            CourseId = request.CourseId,
-            IsPublished = request.IsPublished,
-            Type = request.Type,
-            CreatedAt = DateTime.UtcNow
-        };
+        var lesson = Lesson.Create(request.CourseId, request.Title, request.Content, request.Order, request.IsPublished, (LessonType)request.Type);
 
         _context.Lessons.Add(lesson);
         await _context.SaveChangesAsync(cancellationToken);
-        return res.SetSuccess(lesson);
+        return res.SetSuccess(lesson.ToViewDto());
     }
 }

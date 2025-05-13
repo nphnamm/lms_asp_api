@@ -25,6 +25,6 @@ public class GetLessonQuestionsQueryHandler : IRequestHandler<GetLessonQuestions
             .OrderBy(q => q.Order)
             .ToListAsync(cancellationToken);
 
-        return res.SetSuccess(questions);
+        return res.SetSuccess(questions.Select(q => q.ToViewDto()).ToList());
     }
 } 

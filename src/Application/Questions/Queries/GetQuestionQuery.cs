@@ -23,8 +23,8 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionR, SingleRespo
             .FirstOrDefaultAsync(q => q.Id == request.Id, cancellationToken);
 
         if (question == null)
-            return res.SetError("Question not found");
+            return new SingleResponse().SetError("Question not found");
 
-        return res.SetSuccess(question);
+        return new SingleResponse().SetSuccess(question.ToViewDto());
     }
 } 

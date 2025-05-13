@@ -18,14 +18,14 @@ public class GetLessonQueryHandler : IRequestHandler<GetLessonR, SingleResponse>
 
     public async Task<SingleResponse> Handle(GetLessonR request, CancellationToken cancellationToken)
     {
-        var res = new SingleResponse();
         var lesson = await _context.Lessons
+            .Include(l => l.Questions)
             .FirstOrDefaultAsync(l => l.Id == request.Id, cancellationToken);
 
         if (lesson == null)
-            return res.SetError("Lesson not found");
+            return new SingleResponse().SetError("Lesson not found");
 
-        return res.SetSuccess(lesson);
+        return new SingleResponse().SetSuccess(lesson.ToViewDto());
 
     }
 }

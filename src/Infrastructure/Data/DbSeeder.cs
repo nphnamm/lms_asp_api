@@ -134,7 +134,7 @@ public static class DbSeeder
                 CourseId = course.Id,
                 CreatedAt = DateTime.UtcNow,
                 IsPublished = true,
-                Type = 1,
+                Type = LessonType.Text,
             };
 
             var lesson2 = new Lesson
@@ -146,14 +146,14 @@ public static class DbSeeder
                 CourseId = course.Id,
                 CreatedAt = DateTime.UtcNow,
                 IsPublished = true,
-                Type = 3
+                Type = LessonType.MultipleChoice
             };
 
             context.Lessons.AddRange(lesson1, lesson2);
             await context.SaveChangesAsync();
 
             // Add questions and options for the MultipleChoice lesson
-            if (lesson2.Type == 3)
+            if (lesson2.Type == LessonType.MultipleChoice)
             {
                 var question1 = new Question
                 {

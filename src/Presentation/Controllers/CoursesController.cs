@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Common.Models;
 using Application.Request.Course;
+using Application.Common.Reponses;
 namespace Presentation.Controllers;
 
 [Authorize]
@@ -20,7 +21,7 @@ public class CoursesController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCourses([FromQuery] bool includeUnpublished = false)
+    public async Task<IActionResult> GetCourses([FromQuery] bool includeUnpublished = true)
     {
         // Only instructors can see unpublished courses
         if (includeUnpublished && !IsInstructor)
@@ -55,18 +56,20 @@ public class CoursesController : BaseController
         return Ok(course);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<IActionResult> UpdateCourse(Guid id, UpdateCourseR command)
     {
+        var res = new SingleResponse();
         if (id != command.Id)
-            return BadRequest();
+            res.SetError("Invalid course ID");
+
 
         // Get the course to check ownership
         var course = await _mediator.Send(new GetCourseR { Id = id });
         if (course == null)
             return NotFound();
 
-        // Only instructors can update courses
+        // Only instructors can update courses  
         if (!IsInstructor)
             return Forbid();
 

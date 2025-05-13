@@ -7,12 +7,15 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Domain.Enums;
 
 namespace Application.Questions.Commands;
 
 public class CreateMultipleQuestionsCommand : IRequest<List<Guid>>
 {
     public Guid LessonId { get; set; }
+
+    public LessonType LessonType { get; set; }
     public List<QuestionDto> Questions { get; set; } = new();
 }
 
@@ -43,8 +46,9 @@ public class CreateMultipleQuestionsCommandHandler : IRequestHandler<CreateMulti
                 Id = Guid.NewGuid(),
                 LessonId = request.LessonId,
                 Text = questionDto.Text,
+                Type = request.LessonType,
                 CreatedAt = DateTime.UtcNow,
-                Order = questionDto.Order
+                Order = request.Questions.IndexOf(questionDto)
             };
 
             if (questionDto.Options != null && questionDto.Options.Count > 0)
@@ -73,4 +77,4 @@ public class CreateMultipleQuestionsCommandHandler : IRequestHandler<CreateMulti
 
         return createdQuestionIds;
     }
-} 
+}

@@ -13,6 +13,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Domain.Enums;
 using Application.Common.Extensions;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +74,11 @@ builder.Services.AddMediatR(p =>
 });
 // Add TokenService
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+// Add OTP and Email services
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IOtpService, OtpService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // add enum converter
 

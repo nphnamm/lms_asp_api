@@ -34,6 +34,7 @@ public static class DiUserExtension
     {
         p.AddBehavior<IRequestHandler<RegisterUserR, SingleResponse>, RegisterUserCommandHandler>(life);
         p.AddBehavior<IRequestHandler<AuthenticateUserR, SingleResponse>, AuthenticateUserCommandHandler>(life);
+        p.AddBehavior<IRequestHandler<VerifyOtpR, SingleResponse>, VerifyOtpCommandHandler>(life);
         // p.AddBehavior<IRequestHandler<RefreshTokenR, SingleResponse>, RefreshTokenCommandHandler>(life);
     }
 
