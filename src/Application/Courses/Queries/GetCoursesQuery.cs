@@ -2,15 +2,13 @@ using MediatR;
 using Application.Common.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Application.Common.Reponses;
+using Application.Request.Course;
 namespace Application.Courses.Queries;
 
-public class GetCoursesQuery : IRequest<List<CourseDto>>
-{
-    public bool IncludeUnpublished { get; set; } = false;
-}
 
-public class GetCoursesQueryHandler : IRequestHandler<GetCoursesQuery, List<CourseDto>>
+
+public class GetCoursesQueryHandler : IRequestHandler<GetCoursesR, SingleResponse>
 {
     private readonly ApplicationDbContext _context;
 
@@ -19,8 +17,9 @@ public class GetCoursesQueryHandler : IRequestHandler<GetCoursesQuery, List<Cour
         _context = context;
     }
 
-    public async Task<List<CourseDto>> Handle(GetCoursesQuery request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(GetCoursesR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var query = _context.Courses
             .Include(c => c.Instructor)
             .AsQueryable();
@@ -32,16 +31,6 @@ public class GetCoursesQueryHandler : IRequestHandler<GetCoursesQuery, List<Cour
 
         var courses = await query.ToListAsync(cancellationToken);
 
-        return courses.Select(course => new CourseDto
-        {
-            Id = course.Id,
-            Title = course.Title,
-            Description = course.Description,
-            Price = course.Price,
-            InstructorId = course.InstructorId,
-            IsPublished = course.IsPublished,
-            CreatedAt = course.CreatedAt,
-            UpdatedAt = course.UpdatedAt
-        }).ToList();
+        return res.SetSuccess(courses);
     }
 } 

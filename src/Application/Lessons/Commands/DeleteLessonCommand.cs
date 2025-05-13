@@ -1,15 +1,14 @@
 using MediatR;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Application.Request.Lesson;
+using Application.Common.Reponses;
 
 namespace Application.Lessons.Commands;
 
-public class DeleteLessonCommand : IRequest<bool>
-{
-    public Guid Id { get; set; }
-}
 
-public class DeleteLessonCommandHandler : IRequestHandler<DeleteLessonCommand, bool>
+
+public class DeleteLessonCommandHandler : IRequestHandler<DeleteLessonR, SingleResponse>
 {
     private readonly ApplicationDbContext _context;
 
@@ -18,15 +17,16 @@ public class DeleteLessonCommandHandler : IRequestHandler<DeleteLessonCommand, b
         _context = context;
     }
 
-    public async Task<bool> Handle(DeleteLessonCommand request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(DeleteLessonR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var lesson = await _context.Lessons.FindAsync(new object[] { request.Id }, cancellationToken);
         
         if (lesson == null)
-            return false;
+            return res.SetError("Lesson not found");
 
         _context.Lessons.Remove(lesson);
         await _context.SaveChangesAsync(cancellationToken);
-        return true;
+        return res.SetSuccess(true);
     }
 } 

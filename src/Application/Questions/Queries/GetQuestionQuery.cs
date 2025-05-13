@@ -2,18 +2,11 @@ using MediatR;
 using Application.Common.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
+using Application.Common.Reponses;
 namespace Application.Questions.Queries;
 
-public class GetQuestionQuery : IRequest<QuestionDto>
-{
-    public Guid Id { get; set; }
-}
 
-public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, QuestionDto>
+public class GetQuestionQueryHandler : IRequestHandler<GetQuestionR, SingleResponse>
 {
     private readonly ApplicationDbContext _context;
 
@@ -22,29 +15,16 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
         _context = context;
     }
 
-    public async Task<QuestionDto> Handle(GetQuestionQuery request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(GetQuestionR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var question = await _context.Questions
             .Include(q => q.Options)
             .FirstOrDefaultAsync(q => q.Id == request.Id, cancellationToken);
 
         if (question == null)
-            return null;
+            return res.SetError("Question not found");
 
-        return new QuestionDto
-        {
-            Id = question.Id,
-            LessonId = question.LessonId,
-            Text = question.Text,
-            Type = question.Type,
-            Order = question.Order,
-            Options = question.Options.Select(o => new OptionDto
-            {
-                Id = o.Id,
-                Text = o.Text,
-                IsCorrect = o.IsCorrect,
-                Order = o.Order
-            }).ToList()
-        };
+        return res.SetSuccess(question);
     }
 } 

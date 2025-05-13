@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Common.Models;
-
+using Application.Request.Course;
 namespace Presentation.Controllers;
 
 [Authorize]
@@ -20,52 +20,49 @@ public class CoursesController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<CourseDto>>> GetCourses([FromQuery] bool includeUnpublished = false)
+    public async Task<IActionResult> GetCourses([FromQuery] bool includeUnpublished = false)
     {
         // Only instructors can see unpublished courses
         if (includeUnpublished && !IsInstructor)
             return Forbid();
 
-        var query = new GetCoursesQuery { IncludeUnpublished = includeUnpublished };
+        var query = new GetCoursesR { IncludeUnpublished = includeUnpublished };
         var courses = await _mediator.Send(query);
         return Ok(courses);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CourseDto>> GetCourse(Guid id)
+    public async Task<IActionResult> GetCourse(Guid id)
     {
-        var query = new GetCourseQuery { Id = id };
+        var query = new GetCourseR { Id = id };
         var course = await _mediator.Send(query);
 
         if (course == null)
             return NotFound();
 
-        // Only instructors can see unpublished courses
-        if (!course.IsPublished && !IsInstructor)
-            return Forbid();
 
         return Ok(course);
     }
 
     [HttpPost]
     [Authorize(Roles = "Instructor")]
-    public async Task<ActionResult<GeneralServiceResponseDto<CourseDto>>> CreateCourse(CreateCourseCommand command)
+    public async Task<IActionResult> CreateCourse(CreateCourseR command)
     {
         // Set the instructor ID from the current user
         command.InstructorId = CurrentUserId ?? throw new UnauthorizedAccessException("User ID not found");
         var course = await _mediator.Send(command);
 
-        return Ok(GeneralServiceResponseDto<CourseDto>.Success(course, "Course created successfully"));
+        return Ok(course);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCourse(Guid id, UpdateCourseCommand command)
+    public async Task<IActionResult> UpdateCourse(Guid id, UpdateCourseR command)
     {
         if (id != command.Id)
             return BadRequest();
 
         // Get the course to check ownership
-        var course = await _mediator.Send(new GetCourseQuery { Id = id });
+        var course = await _mediator.Send(new GetCourseR { Id = id });
         if (course == null)
             return NotFound();
 
@@ -73,22 +70,19 @@ public class CoursesController : BaseController
         if (!IsInstructor)
             return Forbid();
 
-        // Only the course owner can update it
-        if (course.InstructorId != CurrentUserId)
-            return Forbid();
 
         var success = await _mediator.Send(command);
-        if (!success)
+        if (!success.Succeeded)
             return NotFound();
 
-        return NoContent();
+        return Ok(success);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCourse(Guid id)
     {
         // Get the course to check ownership
-        var course = await _mediator.Send(new GetCourseQuery { Id = id });
+        var course = await _mediator.Send(new GetCourseR { Id = id });
         if (course == null)
             return NotFound();
 
@@ -96,15 +90,11 @@ public class CoursesController : BaseController
         if (!IsInstructor)
             return Forbid();
 
-        // Only the course owner can delete it
-        if (course.InstructorId != CurrentUserId)
-            return Forbid();
-
-        var command = new DeleteCourseCommand { Id = id };
+        var command = new DeleteCourseR { Id = id };
         var success = await _mediator.Send(command);
-        if (!success)
+        if (!success.Succeeded)
             return NotFound();
 
-        return NoContent();
+        return Ok(success);
     }
 }

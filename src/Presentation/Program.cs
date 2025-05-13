@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Presentation.Middleware;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Domain.Enums;
+using Application.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +54,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.Converters.Add(new FlexibleLessonTypeEnumConverter());
     });
 
@@ -64,8 +64,13 @@ builder.Services.AddControllers()
 // builder.Services.AddSwaggerGen(p => { p.EnableAnnotations(); });
 
 // Add MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.AssemblyReference).Assembly));
-
+builder.Services.AddMediatR(p =>
+{
+    p.RegisterServicesFromAssembly(typeof(Application.AssemblyReference).Assembly);
+    p.AddDiUser();
+    p.AddDiLesson();
+    p.AddDiCourse();
+});
 // Add TokenService
 builder.Services.AddScoped<ITokenService, TokenService>();
 

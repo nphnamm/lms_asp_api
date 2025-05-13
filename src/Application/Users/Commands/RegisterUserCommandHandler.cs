@@ -2,25 +2,30 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Application.Common.Models;
+using Application.Common.Reponses;
+using static Application.Constants.Error;
+using Application.Request;
 
 namespace Application.Users.Commands;
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<UserResponse>>
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserR, SingleResponse>
 {
     private readonly UserManager<User> _userManager;
-    
+
     public RegisterUserCommandHandler(UserManager<User> userManager)
     {
         _userManager = userManager;
     }
-    
-    public async Task<Result<UserResponse>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+
+    public async Task<SingleResponse> Handle(RegisterUserR request, CancellationToken cancellationToken)
     {
+
+        var res = new SingleResponse();
+
         // Kiểm tra email đã tồn tại
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
-            return Result<UserResponse>.Failure("Email đã được đăng ký");
-        
+            return res.SetError(nameof(E001), E001);
         // Tạo user mới
         var user = new User
         {
@@ -31,24 +36,16 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
             CreatedAt = DateTime.UtcNow,
             IsActive = true
         };
-        
+
         var result = await _userManager.CreateAsync(user, request.Password);
-        
+
         if (!result.Succeeded)
-            return Result<UserResponse>.Failure(string.Join(", ", result.Errors.Select(e => e.Description)));
+            return res.SetError(nameof(E001), E001);
 
         // Assign Instructor role
         await _userManager.AddToRoleAsync(user, "Instructor");
-        
+
         // Trả về thông tin user đã tạo
-        return Result<UserResponse>.Success(new UserResponse
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            IsActive = user.IsActive,
-            CreatedAt = user.CreatedAt
-        });
+        return res.SetSuccess(user);
     }
 }

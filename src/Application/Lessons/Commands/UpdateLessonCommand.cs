@@ -4,21 +4,14 @@ using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Application.Request.Lesson;
+using Application.Common.Reponses;
 
 namespace Application.Lessons.Commands;
 
-public class UpdateLessonCommand : IRequest<bool>
-{
-    public Guid Id { get; set; }
-    public string Title { get; set; }
-    public string Content { get; set; }
-    public int Order { get; set; }
-    public bool IsPublished { get; set; }
-    public int Type { get; set; }
-    public string CorrectAnswer { get; set; }
-}
 
-public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonCommand, bool>
+
+public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonR, SingleResponse>    
 {
     private readonly ApplicationDbContext _context;
 
@@ -27,12 +20,13 @@ public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonCommand, b
         _context = context;
     }
 
-    public async Task<bool> Handle(UpdateLessonCommand request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(UpdateLessonR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var lesson = await _context.Lessons.FindAsync(new object[] { request.Id }, cancellationToken);
 
         if (lesson == null)
-            return false;
+            return res.SetError("Lesson not found");
 
         lesson.Title = request.Title;
         lesson.Content = request.Content;
@@ -42,6 +36,6 @@ public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonCommand, b
         lesson.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
-        return true;
+        return res.SetSuccess(true);
     }
 }

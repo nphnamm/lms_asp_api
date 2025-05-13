@@ -1,16 +1,12 @@
 using MediatR;
-using Application.Common.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Application.Common.Reponses;
 namespace Application.Courses.Queries;
 
-public class GetCourseQuery : IRequest<CourseDto>
-{
-    public Guid Id { get; set; }
-}
 
-public class GetCourseQueryHandler : IRequestHandler<GetCourseQuery, CourseDto>
+
+public class GetCourseQueryHandler : IRequestHandler<GetCourseR, SingleResponse>
 {
     private readonly ApplicationDbContext _context;
 
@@ -19,25 +15,16 @@ public class GetCourseQueryHandler : IRequestHandler<GetCourseQuery, CourseDto>
         _context = context;
     }
 
-    public async Task<CourseDto> Handle(GetCourseQuery request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(GetCourseR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var course = await _context.Courses
             .Include(c => c.Instructor)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         if (course == null)
-            return null;
+            return res.SetError("Course not found");
 
-        return new CourseDto
-        {
-            Id = course.Id,
-            Title = course.Title,
-            Description = course.Description,
-            Price = course.Price,
-            InstructorId = course.InstructorId,
-            IsPublished = course.IsPublished,
-            CreatedAt = course.CreatedAt,
-            UpdatedAt = course.UpdatedAt
-        };
+        return res.SetSuccess(course);
     }
 }

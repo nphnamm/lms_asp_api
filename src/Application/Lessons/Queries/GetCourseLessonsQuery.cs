@@ -2,16 +2,11 @@ using MediatR;
 using Application.Common.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Application.Common.Reponses;
 namespace Application.Lessons.Queries;
 
-public class GetCourseLessonsQuery : IRequest<List<LessonDto>>
-{
-    public Guid CourseId { get; set; }
-    public bool IncludeUnpublished { get; set; } = false;
-}
 
-public class GetCourseLessonsQueryHandler : IRequestHandler<GetCourseLessonsQuery, List<LessonDto>>
+public class GetCourseLessonsQueryHandler : IRequestHandler<GetCourseLessonsR, SingleResponse>
 {
     private readonly ApplicationDbContext _context;
 
@@ -20,8 +15,9 @@ public class GetCourseLessonsQueryHandler : IRequestHandler<GetCourseLessonsQuer
         _context = context;
     }
 
-    public async Task<List<LessonDto>> Handle(GetCourseLessonsQuery request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(GetCourseLessonsR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var query = _context.Lessons
             .Where(l => l.CourseId == request.CourseId)
             .AsQueryable();
@@ -35,15 +31,6 @@ public class GetCourseLessonsQueryHandler : IRequestHandler<GetCourseLessonsQuer
             .OrderBy(l => l.Order)
             .ToListAsync(cancellationToken);
 
-        return lessons.Select(lesson => new LessonDto
-        {
-            Id = lesson.Id,
-            Title = lesson.Title,
-            Content = lesson.Content,
-            Type = lesson.Type,
-            CourseId = lesson.CourseId,
-            CreatedAt = lesson.CreatedAt,
-            UpdatedAt = lesson.UpdatedAt
-        }).ToList();
+        return res.SetSuccess(lessons);
     }
 }

@@ -2,20 +2,14 @@ using MediatR;
 using Domain.Enums;
 using Infrastructure.Data;
 using Domain.Entities;
+using Application.Request.Lesson;
+using Application.Common.Reponses;
 
 namespace Application.Lessons.Commands;
 
-public class CreateLessonCommand : IRequest<Guid>
-{
-    public string Title { get; set; }
-    public string Content { get; set; }
-    public int Order { get; set; }
-    public Guid CourseId { get; set; }
-    public bool IsPublished { get; set; }
-    public int Type { get; set; }
-}
 
-public class CreateLessonCommandHandler : IRequestHandler<CreateLessonCommand, Guid>
+
+public class CreateLessonCommandHandler : IRequestHandler<CreateLessonR, SingleResponse>
 {
     private readonly ApplicationDbContext _context;
 
@@ -24,8 +18,9 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonCommand, G
         _context = context;
     }
 
-    public async Task<Guid> Handle(CreateLessonCommand request, CancellationToken cancellationToken)
+    public async Task<SingleResponse> Handle(CreateLessonR request, CancellationToken cancellationToken)
     {
+        var res = new SingleResponse();
         var lesson = new Lesson
         {
             Id = Guid.NewGuid(),
@@ -40,6 +35,6 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonCommand, G
 
         _context.Lessons.Add(lesson);
         await _context.SaveChangesAsync(cancellationToken);
-        return lesson.Id;
+        return res.SetSuccess(lesson);
     }
 }
