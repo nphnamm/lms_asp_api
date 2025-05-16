@@ -1,46 +1,47 @@
-using System.Text.Json.Serialization;
-using Domain.Entities;
-
 namespace Domain.Entities;
 
-
-partial class Course
+partial class Media
 {
     #region -- Methods --
 
     /// <summary>
     /// Initialize
     /// </summary>
-    public Course()
+    public Media()
     {
 
     }
-    
-    public static Course Create(Guid id,Guid instructorId, string title, string description, decimal price, bool isPublished, string? imageUrl = null)
+
+    public static Media Create(
+        string fileName,
+        string contentType,
+        string url,
+        Guid entityId,
+        string entityType
+    )
     {
-        var res = new Course
+        var res = new Media
         {
-            Id = id,
+            Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            IsPublished = isPublished,
-            InstructorId = instructorId,
-            Title = title,
-            Description = description,
-            Price = price,
-            ImageUrl = imageUrl
+            IsActive = true,
+            FileName = fileName,
+            ContentType = contentType,
+            Url = url,
+            EntityId = entityId,
+            EntityType = entityType
         };
 
         return res;
     }
 
 
-    public void Update(string title, string description, decimal price, bool isPublished)
+    public void Update(string fileName, string contentType, string url)
     {
-        Title = title;
-        Description = description;
-        Price = price;
-        IsPublished = isPublished;
+        FileName = fileName;
+        ContentType = contentType;
+        Url = url;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -52,7 +53,7 @@ partial class Course
     /// <param name="modifiedBy">Modified by</param>
     public void UpdateVisibility()
     {
-        IsPublished = !IsPublished;
+        IsActive = !IsActive;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -96,10 +97,10 @@ partial class Course
         return new T
         {
             Id = Id,
-            Title = Title,
-            Description = Description,
-            Price = Price,
-            IsPublished = IsPublished,
+            FileName = FileName,
+            ContentType = ContentType,
+            Url = Url,
+            EntityId = EntityId,
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt ?? DateTime.UtcNow
         };
@@ -118,10 +119,10 @@ partial class Course
         /// 
         /// </summary>
         public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public bool IsPublished { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public string Url { get; set; }
+        public Guid EntityId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

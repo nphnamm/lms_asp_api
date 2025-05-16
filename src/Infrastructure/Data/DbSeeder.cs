@@ -23,6 +23,7 @@ public static class DbSeeder
         context.Lessons.RemoveRange(context.Lessons);
         context.Enrollments.RemoveRange(context.Enrollments);
         context.Courses.RemoveRange(context.Courses);
+        context.Media.RemoveRange(context.Media);
         context.Users.RemoveRange(context.Users);
         context.Roles.RemoveRange(context.Roles);
         await context.SaveChangesAsync();
@@ -117,12 +118,29 @@ public static class DbSeeder
                 Description = "Learn the basics of programming with this comprehensive course.",
                 Price = 49.99m,
                 InstructorId = instructor.Id,
+                ImageUrl = "https://via.placeholder.com/150",
                 CreatedAt = DateTime.UtcNow,
                 IsPublished = true
             };
 
             context.Courses.Add(course);
             await context.SaveChangesAsync();
+
+            // Add sample media
+            var media = new Media
+            {
+                Id = Guid.NewGuid(),
+                FileName = "course-image.jpg",
+                ContentType = "Image",
+                Url = "https://via.placeholder.com/150",
+                EntityId = course.Id,
+                EntityType = "Course",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+            context.Media.Add(media);
+            await context.SaveChangesAsync();
+
 
             // Add sample lessons
             var lesson1 = new Lesson

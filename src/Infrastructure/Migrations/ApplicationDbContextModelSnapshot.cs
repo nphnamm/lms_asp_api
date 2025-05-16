@@ -35,6 +35,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
                     b.Property<Guid>("InstructorId")
                         .HasColumnType("uuid");
 
@@ -130,6 +133,52 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Lessons");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Media", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("Domain.Entities.Option", b =>
@@ -464,6 +513,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Media", b =>
+                {
+                    b.HasOne("Domain.Entities.Course", null)
+                        .WithMany("Media")
+                        .HasForeignKey("CourseId");
+                });
+
             modelBuilder.Entity("Domain.Entities.Option", b =>
                 {
                     b.HasOne("Domain.Entities.Lesson", null)
@@ -546,6 +602,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Enrollments");
 
                     b.Navigation("Lessons");
+
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("Domain.Entities.Lesson", b =>

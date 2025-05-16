@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Request;
 using Application.Request;
+using Application.Users.Queries;
 namespace Application.Common.Extensions;
 
 
@@ -45,7 +46,7 @@ public static class DiUserExtension
     /// <param name="life">ServiceLifetime</param>
     public static void AddUserQueries(this MediatRServiceConfiguration p, ServiceLifetime life = ServiceLifetime.Scoped)
     {
-        // p.AddBehavior<IRequestHandler<GetUserProfileR, SingleResponse>, GetUserProfileQueryHandler>(life);
+        p.AddBehavior<IRequestHandler<GetUserProfileR, SingleResponse>, GetUserProfileQueryHandler>(life);
     }
 
     #endregion

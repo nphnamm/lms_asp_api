@@ -1,5 +1,3 @@
-
-
 namespace Domain.Entities;
 
 public partial class Course
@@ -13,6 +11,8 @@ public partial class Course
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsPublished { get; set; }
+    public string? ImageUrl { get; set; }
     public ICollection<Lesson> Lessons { get; set; }
     public ICollection<Enrollment> Enrollments { get; set; }
+    public ICollection<Media> Media { get; set; }
 }

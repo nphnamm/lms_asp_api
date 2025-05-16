@@ -4,7 +4,6 @@ using Infrastructure.Data;
 using Domain.Entities;
 using Application.Request.Lesson;
 using Application.Common.Reponses;
-using Domain.Entities;
 
 namespace Application.Lessons.Commands;
 

@@ -79,10 +79,24 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IFileStorageService, MinioStorageService>();
 
-// add enum converter
+// Add cors policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000", "http://localhost:4200") // Add your frontend URLs here
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
+
+// Add CORS middleware before other middleware
+app.UseCors("AllowAllOrigins");
 
 // Add authentication and authorization middleware
 app.UseAuthentication();

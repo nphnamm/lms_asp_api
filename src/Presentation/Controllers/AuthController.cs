@@ -1,12 +1,13 @@
-
 using Application.Request;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Presentation.Controllers;
 
 // Presentation/Controllers/AuthController.cs
 [ApiController]
 [Route("api/auth")]
-public class AuthController : ControllerBase
+public class AuthController : BaseController
 {
     private readonly IMediator _mediator;
 
@@ -18,11 +19,8 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] AuthenticateUserR command)
     {
-
         var result = await _mediator.Send(command);
         return Ok(result);
-
-
     }
 
     [HttpPost("register")]
@@ -42,10 +40,19 @@ public class AuthController : ControllerBase
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(RefreshTokenR command)
     {
-
         var result = await _mediator.Send(command);
         return Ok(result);
+    }
 
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> Me()
+    {
+        if (CurrentUserId == null)
+            return Unauthorized();
+
+        var result = await _mediator.Send(new GetUserProfileR { UserId = CurrentUserId.Value });
+        return Ok(result);
     }
 }
 

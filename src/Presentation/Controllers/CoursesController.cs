@@ -47,7 +47,7 @@ public class CoursesController : BaseController
 
     [HttpPost]
     [Authorize(Roles = "Instructor")]
-    public async Task<IActionResult> CreateCourse(CreateCourseR command)
+    public async Task<IActionResult> CreateCourse([FromForm] CreateCourseR command)
     {
         // Set the instructor ID from the current user
         command.InstructorId = CurrentUserId ?? throw new UnauthorizedAccessException("User ID not found");

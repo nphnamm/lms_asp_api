@@ -18,6 +18,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Enrollment> Enrollments { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<Option> Options { get; set; }
+    public DbSet<Media> Media { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -61,6 +62,13 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
                 .WithMany()
                 .HasForeignKey(e => e.InstructorId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure Media
+        builder.Entity<Media>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.EntityType, e.EntityId });
         });
 
         // Configure Lesson
