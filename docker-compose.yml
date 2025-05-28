@@ -99,3 +99,4 @@ volumes:
   minio_data:
   postgres_data:
   aspnet_data:
+  jenkins_home:
