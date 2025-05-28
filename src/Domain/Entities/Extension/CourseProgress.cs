@@ -1,44 +1,46 @@
 
-using Domain.Enums;
 
+using System.Text.Json.Serialization;
+using Domain.Entities;
 
 namespace Domain.Entities;
 
 
-partial class Question
+partial class CourseProgress
 {
     #region -- Methods --
 
     /// <summary>
     /// Initialize
     /// </summary>
-    public Question()
+    public CourseProgress()
     {
 
     }
-
-    public static Question Create(Guid exerciseId, string text, ExerciseType type, int order)
+    
+    public static CourseProgress Create(Guid id,Guid courseId, Guid userId, DateTime learningDate, CourseProgressStatus status, bool isCompleted)
     {
-        var res = new Question
+        var res = new CourseProgress
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            ExerciseId = exerciseId,
-            Text = text,
-            Type = type,
-            Order = order
+            CourseId = courseId,
+            UserId = userId,
+            LearningDate = learningDate,
+            Status = status,
+            IsCompleted = isCompleted,
+            IsDeleted = false
         };
 
         return res;
     }
 
 
-    public void Update(string text, ExerciseType type, int order)
+    public void Update(CourseProgressStatus status, bool isCompleted)
     {
-        Text = text;
-        Type = type;
-        Order = order;
+        Status = status;
+        IsCompleted = isCompleted;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -48,11 +50,6 @@ partial class Question
     /// <param name="hide">Hide option</param>
     /// <param name="isArchived">IsArchived</param>
     /// <param name="modifiedBy">Modified by</param>
-    // public void UpdateVisibility()
-    // {
-    //     IsPublished = !IsPublished;
-    //     UpdatedAt = DateTime.UtcNow;
-    // }
 
     /// <summary>
     /// Delete
@@ -85,7 +82,6 @@ partial class Question
         return res;
     }
 
-
     /// <summary>
     /// Convert to data transfer object
     /// </summary>
@@ -95,19 +91,20 @@ partial class Question
         return new T
         {
             Id = Id,
-            Text = Text,
-            Type = Type,
-            Options = Options.Select(o => o.ToBaseDto<Option.BaseDto>()).ToList(),
-            Order = Order,
+            CourseId = CourseId,
+            UserId = UserId,
+            LearningDate = LearningDate,
+            Status = Status,
+            IsCompleted = IsCompleted,
             CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt ?? DateTime.UtcNow
+            UpdatedAt = UpdatedAt ,
+            IsDeleted = IsDeleted
         };
     }
 
     #endregion
 
     #region -- Classes --
-
 
     /// <summary>
     /// Base
@@ -118,10 +115,12 @@ partial class Question
         /// 
         /// </summary>
         public Guid Id { get; set; }
-        public string Text { get; set; }
-        public ExerciseType Type { get; set; }
-        public List<Option.BaseDto> Options { get; set; }
-        public int Order { get; set; }
+        public Guid CourseId { get; set; }
+        public Guid UserId { get; set; }
+        public DateTime LearningDate { get; set; }
+        public CourseProgressStatus Status { get; set; }
+        public bool IsDeleted { get; set; } = false;
+        public bool IsCompleted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
@@ -141,7 +140,6 @@ partial class Question
     {
 
     }
-
 
     #endregion
 }

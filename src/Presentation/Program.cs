@@ -56,7 +56,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.Converters.Add(new FlexibleLessonTypeEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new FlexibleExerciseTypeEnumConverter());
     });
 
 // Swagger
@@ -157,27 +157,27 @@ app.Use(async (context, next) =>
 app.MapControllers();
 app.Run();
 
-// Custom converter for LessonType to accept both string and number
-public class FlexibleLessonTypeEnumConverter : JsonConverter<LessonType>
+// Custom converter for ExerciseType to accept both string and number
+public class FlexibleExerciseTypeEnumConverter : JsonConverter<ExerciseType>
 {
-    public override LessonType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ExerciseType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.Number && reader.TryGetInt32(out int intValue))
         {
-            return (LessonType)intValue;
+            return (ExerciseType)intValue;
         }
         if (reader.TokenType == JsonTokenType.String)
         {
             var str = reader.GetString();
-            if (Enum.TryParse<LessonType>(str, true, out var result))
+            if (Enum.TryParse<ExerciseType>(str, true, out var result))
                 return result;
             if (int.TryParse(str, out int intStrValue))
-                return (LessonType)intStrValue;
+                return (ExerciseType)intStrValue;
         }
-        throw new JsonException($"Unable to convert value to LessonType: {reader.GetString()}");
+        throw new JsonException($"Unable to convert value to ExerciseType: {reader.GetString()}");
     }
 
-    public override void Write(Utf8JsonWriter writer, LessonType value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ExerciseType value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value.ToString());
     }

@@ -41,7 +41,9 @@ partial class User
             UpdatedAt = DateTime.UtcNow,
             Email = email,
             PhoneNumber = phoneNumber,
-            UserName = userName
+            UserName = userName,
+            IsActive = true,
+            IsDeleted = false
         };
 
         return res;
@@ -113,7 +115,21 @@ partial class User
             PhoneNumber = PhoneNumber,
             UserName = UserName,
             CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt ?? DateTime.UtcNow
+            UpdatedAt = UpdatedAt ?? DateTime.UtcNow,
+            IsActive = IsActive,
+            IsDeleted = IsDeleted,
+            ProfilePicture = ProfilePicture,
+            Bio = Bio,
+            Education = Education,
+            Qualifications = Qualifications,
+            Skills = Skills,
+            Preferences = Preferences,
+            TimeZone = TimeZone,
+            Language = Language,
+            LastLoginAt = LastLoginAt,
+            CompletedCourses = CompletedCourses,
+            AverageScore = AverageScore,
+            SocialLinks = SocialLinks,
         };
     }
 
@@ -136,6 +152,22 @@ partial class User
         public string UserName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
+        public string? ProfilePicture { get; set; }
+        public string? Bio { get; set; }
+        public string? Education { get; set; }
+        public string? Qualifications { get; set; }
+        public string? Skills { get; set; }
+        public string? Preferences { get; set; }
+        public string? TimeZone { get; set; }
+        public string? Language { get; set; }
+        public DateTime? LastLoginAt { get; set; }
+        public int CompletedCourses { get; set; }
+        public decimal AverageScore { get; set; }
+        public string? SocialLinks { get; set; }
+        public bool IsInstructor { get; set; }
+        public string? InstructorBio { get; set; }
     }
 
     /// <summary>

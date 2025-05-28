@@ -1,44 +1,44 @@
-
-using Domain.Enums;
-
-
 namespace Domain.Entities;
 
 
-partial class Question
+partial class ExerciseHistory
 {
     #region -- Methods --
 
     /// <summary>
     /// Initialize
     /// </summary>
-    public Question()
+    public ExerciseHistory()
     {
 
     }
+    
 
-    public static Question Create(Guid exerciseId, string text, ExerciseType type, int order)
+    public static ExerciseHistory Create(Guid id,Guid exerciseId, Guid userId, DateTime startedAt, DateTime completedAt, decimal score)
     {
-        var res = new Question
+        var res = new ExerciseHistory
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             ExerciseId = exerciseId,
-            Text = text,
-            Type = type,
-            Order = order
+            UserId = userId,
+            StartedAt = startedAt,
+            CompletedAt = completedAt,
+            Score = score,
+            IsPassed = score >= 80
         };
 
         return res;
     }
 
 
-    public void Update(string text, ExerciseType type, int order)
+    public void Update(DateTime completedAt, decimal score)
     {
-        Text = text;
-        Type = type;
-        Order = order;
+        
+        CompletedAt = completedAt;
+
+        Score = score;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -48,11 +48,6 @@ partial class Question
     /// <param name="hide">Hide option</param>
     /// <param name="isArchived">IsArchived</param>
     /// <param name="modifiedBy">Modified by</param>
-    // public void UpdateVisibility()
-    // {
-    //     IsPublished = !IsPublished;
-    //     UpdatedAt = DateTime.UtcNow;
-    // }
 
     /// <summary>
     /// Delete
@@ -85,7 +80,6 @@ partial class Question
         return res;
     }
 
-
     /// <summary>
     /// Convert to data transfer object
     /// </summary>
@@ -95,19 +89,21 @@ partial class Question
         return new T
         {
             Id = Id,
-            Text = Text,
-            Type = Type,
-            Options = Options.Select(o => o.ToBaseDto<Option.BaseDto>()).ToList(),
-            Order = Order,
+            ExerciseId = ExerciseId,
+            UserId = UserId,
+            StartedAt = StartedAt,
+            CompletedAt = CompletedAt,
+            Score = Score,
+            IsPassed = IsPassed,
             CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt ?? DateTime.UtcNow
+            UpdatedAt = UpdatedAt,
+            IsDeleted = IsDeleted
         };
     }
 
     #endregion
 
     #region -- Classes --
-
 
     /// <summary>
     /// Base
@@ -118,12 +114,15 @@ partial class Question
         /// 
         /// </summary>
         public Guid Id { get; set; }
-        public string Text { get; set; }
-        public ExerciseType Type { get; set; }
-        public List<Option.BaseDto> Options { get; set; }
-        public int Order { get; set; }
+        public Guid ExerciseId { get; set; }
+        public Guid UserId { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public decimal? Score { get; set; }
+        public bool IsPassed { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     /// <summary>
@@ -141,7 +140,6 @@ partial class Question
     {
 
     }
-
 
     #endregion
 }

@@ -16,32 +16,58 @@ partial class Course
 
     }
     
-    public static Course Create(Guid id,Guid instructorId, string title, string description, decimal price, bool isPublished, string? imageUrl = null)
+    public static Course Create(Guid id,Guid instructorId, string title, string description, decimal price, bool isPublished, string? imageUrl = null, int status = 0, CourseLevel level = CourseLevel.Beginner, string category = "", List<string>? tags = null, List<Guid>? prerequisites = null, decimal rating = 0, int totalEnrollments = 0, string syllabus = "", string learningObjectives = "", string requirements = "", string targetAudience = "")
     {
         var res = new Course
         {
             Id = id,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            IsPublished = isPublished,
-            InstructorId = instructorId,
             Title = title,
             Description = description,
             Price = price,
-            ImageUrl = imageUrl
+            InstructorId = instructorId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            Status = status,
+            IsPublished = isPublished,
+            IsDeleted = false,
+            ImageUrl = imageUrl,
+            Level = level,
+            Category = category,
+            Tags = tags ?? new List<string>(),
+            Prerequisites = prerequisites ?? new List<Guid>(),
+            Rating = rating,
+            TotalEnrollments = totalEnrollments,
+            Syllabus = syllabus,
+            LearningObjectives = learningObjectives,
+            Requirements = requirements,
+            TargetAudience = targetAudience
         };
 
         return res;
     }
 
 
-    public void Update(string title, string description, decimal price, bool isPublished)
+    public void Update(string title, string description, decimal price, bool isPublished, string? imageUrl = null, int status = 0, CourseLevel level = CourseLevel.Beginner, string category = "", List<string>? tags = null, List<Guid>? prerequisites = null, decimal rating = 0, int totalEnrollments = 0, string syllabus = "", string learningObjectives = "", string requirements = "", string targetAudience = "")
     {
         Title = title;
         Description = description;
         Price = price;
         IsPublished = isPublished;
         UpdatedAt = DateTime.UtcNow;
+        Status = status;
+        IsPublished = isPublished;
+        IsDeleted = false;
+        ImageUrl = imageUrl;
+        Level = level;
+        Category = category;
+        Tags = tags ?? new List<string>();
+        Prerequisites = prerequisites ?? new List<Guid>();
+        Rating = rating;
+        TotalEnrollments = totalEnrollments;
+        Syllabus = syllabus;
+        LearningObjectives = learningObjectives;
+        Requirements = requirements;
+        TargetAudience = targetAudience;
     }
 
     /// <summary>
@@ -101,7 +127,20 @@ partial class Course
             Price = Price,
             IsPublished = IsPublished,
             CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt ?? DateTime.UtcNow
+            UpdatedAt = UpdatedAt ?? DateTime.UtcNow,
+            IsDeleted = IsDeleted,
+            ImageUrl = ImageUrl,
+            Duration = Duration,
+            Level = Level,
+            Category = Category,
+            Tags = Tags,
+            Prerequisites = Prerequisites,
+            Rating = Rating,
+            TotalEnrollments = TotalEnrollments,
+            Syllabus = Syllabus,
+            LearningObjectives = LearningObjectives,
+            Requirements = Requirements,
+            TargetAudience = TargetAudience
         };
     }
 
@@ -121,9 +160,24 @@ partial class Course
         public string Title { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public int Status { get; set; }
         public bool IsPublished { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string? ImageUrl { get; set; }
+        public int Duration { get; set; }
+        public CourseLevel Level { get; set; }
+        public string Category { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
+        public List<Guid> Prerequisites { get; set; } = new List<Guid>();
+        public decimal Rating { get; set; }
+        public int TotalEnrollments { get; set; }
+        public string? Syllabus { get; set; }
+        public string? LearningObjectives { get; set; }
+        public string? Requirements { get; set; }
+        public string? TargetAudience { get; set; }
+
     }
 
     /// <summary>

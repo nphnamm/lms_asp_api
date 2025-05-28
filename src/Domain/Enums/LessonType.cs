@@ -1,6 +1,6 @@
 namespace Domain.Enums;
 
-public enum LessonType
+public enum ExerciseType
 {
     Text,
     TrueFalse,

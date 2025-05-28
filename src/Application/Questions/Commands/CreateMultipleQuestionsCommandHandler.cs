@@ -15,7 +15,7 @@ public class CreateMultipleQuestionsCommand : IRequest<List<Guid>>
 {
     public Guid LessonId { get; set; }
 
-    public LessonType LessonType { get; set; }
+    public ExerciseType ExerciseType { get; set; }
     public List<QuestionDto> Questions { get; set; } = new();
 }
 
@@ -46,7 +46,7 @@ public class CreateMultipleQuestionsCommandHandler : IRequestHandler<CreateMulti
                 Id = Guid.NewGuid(),
                 LessonId = request.LessonId,
                 Text = questionDto.Text,
-                Type = request.LessonType,
+                Type = request.ExerciseType,
                 CreatedAt = DateTime.UtcNow,
                 Order = request.Questions.IndexOf(questionDto)
             };

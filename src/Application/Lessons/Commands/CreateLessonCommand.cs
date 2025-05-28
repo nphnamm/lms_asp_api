@@ -39,7 +39,15 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonR, SingleR
                 return res;
             }
         }
-        var lesson = Lesson.Create(request.CourseId, request.Title, request.Content, request.Order, request.IsPublished, (LessonType)request.Type);
+        var lesson = Lesson.Create(
+            request.CourseId,
+            request.Title,
+            request.Description,
+            request.Content,
+            request.Order,
+            request.IsPublished,
+            0
+        );
         _context.Lessons.Add(lesson);
         await _context.SaveChangesAsync(cancellationToken);
         return res.SetSuccess(lesson.ToViewDto());
