@@ -46,7 +46,16 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonR, SingleR
             request.Content,
             request.Order,
             request.IsPublished,
-            0
+            0,
+            (LessonType)request.Type,
+            request.Duration,
+            request.VideoUrl,
+            request.Quiz,
+            request.Tags,   
+            request.Rating,
+            request.TotalEnrollments,
+            request.Notes,
+            request.IsPreview
         );
         _context.Lessons.Add(lesson);
         await _context.SaveChangesAsync(cancellationToken);

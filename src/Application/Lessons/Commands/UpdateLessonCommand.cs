@@ -28,7 +28,7 @@ public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonR, SingleR
         if (lesson == null)
             return res.SetError("Lesson not found");
 
-        lesson.Update(request.Title, request.Content, request.Order, request.IsPublished);
+        lesson.Update(request.Title, request.Content, request.Order, request.IsPublished, 0, (LessonType)request.Type, request.Duration, request.VideoUrl, request.Quiz, request.Tags, request.Rating, request.TotalEnrollments, request.Notes, request.IsPreview);
 
         await _context.SaveChangesAsync(cancellationToken);
         return res.SetSuccess(lesson.ToViewDto());

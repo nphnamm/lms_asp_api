@@ -16,7 +16,7 @@ partial class Course
 
     }
     
-    public static Course Create(Guid id,Guid instructorId, string title, string description, decimal price, bool isPublished, string? imageUrl = null, int status = 0, CourseLevel level = CourseLevel.Beginner, string category = "", List<string>? tags = null, List<Guid>? prerequisites = null, decimal rating = 0, int totalEnrollments = 0, string syllabus = "", string learningObjectives = "", string requirements = "", string targetAudience = "")
+    public static Course Create(Guid id,Guid instructorId, string title, string description, decimal price, bool isPublished, string? imageUrl = null, int status = 0, CourseLevel ?level = null , string ?category = null, List<string>? tags = null, List<Guid>? prerequisites = null, decimal rating = 0, int totalEnrollments = 0, string syllabus = null, string learningObjectives = null, string requirements = null, string targetAudience = null)
     {
         var res = new Course
         {
@@ -31,23 +31,23 @@ partial class Course
             IsPublished = isPublished,
             IsDeleted = false,
             ImageUrl = imageUrl,
-            Level = level,
-            Category = category,
+            Level = level ?? CourseLevel.Beginner,
+            Category = category ?? "",
             Tags = tags ?? new List<string>(),
             Prerequisites = prerequisites ?? new List<Guid>(),
             Rating = rating,
             TotalEnrollments = totalEnrollments,
-            Syllabus = syllabus,
-            LearningObjectives = learningObjectives,
-            Requirements = requirements,
-            TargetAudience = targetAudience
+            Syllabus = syllabus ?? "",
+            LearningObjectives = learningObjectives ?? "",
+            Requirements = requirements ?? "",
+            TargetAudience = targetAudience ?? ""
         };
 
         return res;
     }
 
 
-    public void Update(string title, string description, decimal price, bool isPublished, string? imageUrl = null, int status = 0, CourseLevel level = CourseLevel.Beginner, string category = "", List<string>? tags = null, List<Guid>? prerequisites = null, decimal rating = 0, int totalEnrollments = 0, string syllabus = "", string learningObjectives = "", string requirements = "", string targetAudience = "")
+    public void Update(string title, string description, decimal price, bool isPublished, string? imageUrl = null, int status = 0, CourseLevel ?level = null, string ?category = null, List<string>? tags = null, List<Guid>? prerequisites = null, decimal rating = 0, int totalEnrollments = 0, string syllabus = null, string learningObjectives = null, string requirements = null, string targetAudience = null)
     {
         Title = title;
         Description = description;
@@ -58,16 +58,16 @@ partial class Course
         IsPublished = isPublished;
         IsDeleted = false;
         ImageUrl = imageUrl;
-        Level = level;
+        Level = level ?? CourseLevel.Beginner;
         Category = category;
         Tags = tags ?? new List<string>();
         Prerequisites = prerequisites ?? new List<Guid>();
         Rating = rating;
         TotalEnrollments = totalEnrollments;
-        Syllabus = syllabus;
-        LearningObjectives = learningObjectives;
-        Requirements = requirements;
-        TargetAudience = targetAudience;
+        Syllabus = syllabus ?? "";
+        LearningObjectives = learningObjectives ?? "";
+        Requirements = requirements ?? "";
+        TargetAudience = targetAudience ?? "";
     }
 
     /// <summary>

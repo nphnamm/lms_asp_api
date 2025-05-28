@@ -25,6 +25,6 @@ public class GetCourseQueryHandler : IRequestHandler<GetCourseR, SingleResponse>
         if (course == null)
             return res.SetError("Course not found");
 
-        return res.SetSuccess(course);
+        return res.SetSuccess(course.ToViewDto());
     }
 }

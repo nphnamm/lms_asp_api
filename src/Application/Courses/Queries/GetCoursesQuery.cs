@@ -31,6 +31,6 @@ public class GetCoursesQueryHandler : IRequestHandler<GetCoursesR, SingleRespons
 
         var courses = await query.ToListAsync(cancellationToken);
 
-        return res.SetSuccess(courses);
+        return res.SetSuccess(courses.Select(c => c.ToViewDto()).ToList());
     }
 } 
