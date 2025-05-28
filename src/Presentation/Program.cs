@@ -157,6 +157,8 @@ app.Use(async (context, next) =>
 app.MapControllers();
 app.Run();
 
+
+//hehe ne ưcode
 // Custom converter for ExerciseType to accept both string and number
 public class FlexibleExerciseTypeEnumConverter : JsonConverter<ExerciseType>
 {

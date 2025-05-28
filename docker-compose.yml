@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: src/Presentation/Dockerfile
+      dockerfile: Dockerfile   # sửa đường dẫn Dockerfile cho đúng
     ports:
       - "5029:8080"
     environment:
@@ -60,6 +60,36 @@ services:
     networks:
       - lms-network
 
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    container_name: jenkins
+    restart: unless-stopped
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker     # chắc chắn docker host có ở đây
+      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose  # chắc chắn docker-compose có ở đây
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - JENKINS_OPTS=--prefix=/jenkins
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=true -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=false
+      - DEBIAN_FRONTEND=noninteractive
+    networks:
+      - lms-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/login || exit 1"]  # sửa healthcheck đúng cách
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - postgres
+      - minio
 
 networks:
   lms-network:
@@ -69,3 +99,4 @@ volumes:
   minio_data:
   postgres_data:
   aspnet_data:
+  jenkins_home:
