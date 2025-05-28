@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: src/Presentation/Dockerfile
     ports:
       - "5029:8080"
     environment:
@@ -67,7 +67,7 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
-    container_name: jenkins
+    container_name: jenkins-lms
     restart: unless-stopped
     volumes:
       - jenkins_home:/var/jenkins_home
