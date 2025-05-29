@@ -19,7 +19,7 @@ public class GetLessonQueryHandler : IRequestHandler<GetLessonR, SingleResponse>
     public async Task<SingleResponse> Handle(GetLessonR request, CancellationToken cancellationToken)
     {
         var lesson = await _context.Lessons
-            .Include(l => l.Questions)
+            .Include(l => l.Exercises)
             .FirstOrDefaultAsync(l => l.Id == request.Id, cancellationToken);
 
         if (lesson == null)

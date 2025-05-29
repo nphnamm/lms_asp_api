@@ -12,33 +12,35 @@ partial class ExerciseHistory
     {
 
     }
-    
 
-    public static ExerciseHistory Create(Guid id,Guid exerciseId, Guid userId, DateTime startedAt, DateTime completedAt, decimal score)
+
+    public static ExerciseHistory Create(Guid exerciseId, Guid userId, DateTime startedAt, DateTime completedAt, decimal score)
     {
         var res = new ExerciseHistory
         {
-            Id = id,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
             ExerciseId = exerciseId,
             UserId = userId,
             StartedAt = startedAt,
             CompletedAt = completedAt,
             Score = score,
-            IsPassed = score >= 80
+            TimeTaken = (int)(completedAt - startedAt).TotalMinutes,
+            Status = 1,
+            IsDeleted = false,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+
         };
 
         return res;
     }
 
 
-    public void Update(DateTime completedAt, decimal score)
+    public void Update(decimal score, int status, bool isDeleted)
     {
-        
-        CompletedAt = completedAt;
-
         Score = score;
+        Status = status;
+        IsDeleted = isDeleted;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -94,10 +96,11 @@ partial class ExerciseHistory
             StartedAt = StartedAt,
             CompletedAt = CompletedAt,
             Score = Score,
-            IsPassed = IsPassed,
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt,
-            IsDeleted = IsDeleted
+            IsDeleted = IsDeleted,
+            QuestionHistories = QuestionHistories.Select(q => q.ToBaseDto<QuestionHistory.BaseDto>()).ToList()
+
         };
     }
 
@@ -119,10 +122,10 @@ partial class ExerciseHistory
         public DateTime StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public decimal? Score { get; set; }
-        public bool IsPassed { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public List<QuestionHistory.BaseDto> QuestionHistories { get; set; } = new List<QuestionHistory.BaseDto>();
     }
 
     /// <summary>
@@ -142,4 +145,6 @@ partial class ExerciseHistory
     }
 
     #endregion
+    public ICollection<QuestionHistory> QuestionHistories { get; set; } = new List<QuestionHistory>();
+
 }

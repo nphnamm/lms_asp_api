@@ -45,17 +45,17 @@ public class CreateExerciseCommandHandler : IRequestHandler<CreateExerciseR, Sin
             request.IsPublished,
             request.Type,
             0, // Initial status
-            request.TimeLimit,
-            request.PassingScore,
-            request.RetryLimit,
-            request.AllowPartialCredit,
-            request.Feedback,
-            request.Instructions,
-            request.Weight,
-            request.IsGraded,
-            request.ShowAnswers,
+            request.TimeLimit ?? 0,
+            request.PassingScore ?? 0,
+            request.RetryLimit ?? 0,
+            request.AllowPartialCredit ?? false,
+            request.Feedback ?? null,
+            request.Instructions ?? null,
+            request.Weight ?? 0,
+            request.IsGraded ?? false,
+            request.ShowAnswers ?? false,
             request.DueDate ?? DateTime.UtcNow,
-            request.Hints,
+            request.Hints ?? null,
             0, // Initial average score
             0  // Initial attempt count
         );
@@ -63,6 +63,6 @@ public class CreateExerciseCommandHandler : IRequestHandler<CreateExerciseR, Sin
         _context.Exercises.Add(exercise);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return res.SetSuccess(exercise);
+        return res.SetSuccess(exercise.ToViewDto());
     }
 } 

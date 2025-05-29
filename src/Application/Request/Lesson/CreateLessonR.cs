@@ -13,10 +13,10 @@ public class CreateLessonR : IRequest<SingleResponse>
     public int Type { get; set; }
     public int Duration { get; set; }
     public string VideoUrl { get; set; }
-    public string Quiz { get; set; }
-    public List<string> Tags { get; set; }
-    public decimal Rating { get; set; }
-    public int TotalEnrollments { get; set; }
-    public string Notes { get; set; }
+    public string Resources { get; set; }
+    public List<string> Keywords { get; set; }
+    public decimal ?CompletionRate { get; set; }
+    public int ?ViewCount { get; set; }
+    public string ?Notes { get; set; }
     public bool IsPreview { get; set; }
 }

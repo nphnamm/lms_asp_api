@@ -12,7 +12,6 @@ public partial class ExerciseHistory
     public decimal? Score { get; set; }
     public int TimeTaken { get; set; }
     public int Status { get; set; }
-    public bool IsPassed { get; set; }
     public bool IsDeleted { get; set; } = false;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

@@ -19,31 +19,54 @@ public class UpdateExerciseCommandHandler : IRequestHandler<UpdateExerciseR, Sin
     public async Task<SingleResponse> Handle(UpdateExerciseR request, CancellationToken cancellationToken)
     {
         var res = new SingleResponse();
+
+        if(request.Id == Guid.Empty)
+            return res.SetError("Invalid exercise ID");
+
         var exercise = await _context.Exercises.FindAsync(new object[] { request.Id }, cancellationToken);
 
         if (exercise == null)
             return res.SetError("Exercise not found");
-
+            
+        var title = request.Title ?? exercise.Title;
+        var content = request.Content ?? exercise.Content;
+        var order = request.Order ?? exercise.Order;
+        var isPublished = request.IsPublished ?? exercise.IsPublished;
+        var status = request.Status ?? exercise.Status;
+        var type = request.Type ?? exercise.Type;
+        var timeLimit = request.TimeLimit ?? exercise.TimeLimit;
+        var passingScore = request.PassingScore ?? exercise.PassingScore;
+        var retryLimit = request.RetryLimit ?? exercise.RetryLimit;
+        var allowPartialCredit = request.AllowPartialCredit ?? exercise.AllowPartialCredit;
+        var feedback = request.Feedback ?? exercise.Feedback;
+        var instructions = request.Instructions ?? exercise.Instructions;
+        var weight = request.Weight ?? exercise.Weight;
+        var isGraded = request.IsGraded ?? exercise.IsGraded;
+        var showAnswers = request.ShowAnswers ?? exercise.ShowAnswers;
+        var dueDate = request.DueDate ?? exercise.DueDate;
+        var hints = request.Hints ?? exercise.Hints;
+        var averageScore = request.AverageScore ?? exercise.AverageScore;
+        var attemptCount = request.AttemptCount ?? exercise.AttemptCount;
         exercise.Update(
-            request.Title,
-            request.Content,
-            request.Order,
-            request.IsPublished,
-            request.Type,
-            0, // Status remains unchanged
-            request.TimeLimit,
-            request.PassingScore,
-            request.RetryLimit,
-            request.AllowPartialCredit,
-            request.Feedback,
-            request.Instructions,
-            request.Weight,
-            request.IsGraded,
-            request.ShowAnswers,
-            request.DueDate ?? DateTime.UtcNow,
-            request.Hints,
-            0, // AverageScore remains unchanged
-            0  // AttemptCount remains unchanged
+            title,
+            content,    
+            order,
+            isPublished,
+            type,
+            status,
+            timeLimit,
+            passingScore,
+            retryLimit,
+            allowPartialCredit,
+            feedback,
+            instructions,
+            weight,
+            isGraded,
+            showAnswers,
+            dueDate ?? DateTime.UtcNow,
+            hints,
+            averageScore,
+            attemptCount
         );
 
         await _context.SaveChangesAsync(cancellationToken);

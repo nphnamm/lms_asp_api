@@ -38,6 +38,7 @@ public static class DiExerciseExtension
         p.AddBehavior<IRequestHandler<CreateExerciseR, SingleResponse>, CreateExerciseCommandHandler>(life);
         p.AddBehavior<IRequestHandler<UpdateExerciseR, SingleResponse>, UpdateExerciseCommandHandler>(life);
         p.AddBehavior<IRequestHandler<DeleteExerciseR, SingleResponse>, DeleteExerciseCommandHandler>(life);
+        p.AddBehavior<IRequestHandler<SubmitExerciseR, SingleResponse>, SubmitExerciseCommandHandler>(life);
     }
 
     /// <summary>

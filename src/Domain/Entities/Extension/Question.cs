@@ -17,7 +17,7 @@ partial class Question
 
     }
 
-    public static Question Create(Guid exerciseId, string text, ExerciseType type, int order)
+    public static Question Create(Guid exerciseId, Guid lessonId, string text, ExerciseType type, int order)
     {
         var res = new Question
         {
@@ -25,6 +25,7 @@ partial class Question
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             ExerciseId = exerciseId,
+            LessonId = lessonId,
             Text = text,
             Type = type,
             Order = order

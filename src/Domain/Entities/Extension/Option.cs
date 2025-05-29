@@ -4,6 +4,28 @@ namespace Domain.Entities;
 
 partial class Option
 {
+
+    public static Option Create(Guid questionId, string text, bool isCorrect, int order)
+    {
+        return new Option
+        {
+            Id = Guid.NewGuid(),
+            QuestionId = questionId,
+            Text = text,
+            IsCorrect = isCorrect,
+            Order = order,
+            CreatedAt = DateTime.UtcNow
+        };
+    }
+
+    public void Update(string text, bool isCorrect, int order)
+    {
+        Text = text;
+        IsCorrect = isCorrect;
+        Order = order;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public T ToBaseDto<T>() where T : BaseDto, new()
     {
         return new T

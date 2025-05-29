@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Common.Models;
 using Application.Request.Course;
 using Application.Common.Reponses;
+using Domain.Entities;
 namespace Presentation.Controllers;
 
 [Authorize]
@@ -98,6 +99,18 @@ public class CoursesController : BaseController
         if (!success.Succeeded)
             return NotFound();
 
+        return Ok(success);
+    }
+
+    [HttpPost("enroll")]
+    public async Task<IActionResult> EnrollInCourse(EnrollInCourseR command)
+    {
+        var res = new SingleResponse();
+        if (command.UserId == Guid.Empty){
+            res.SetError("User ID not found");
+            return Ok(res);
+        }
+        var success = await _mediator.Send(command);
         return Ok(success);
     }
 }

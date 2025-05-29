@@ -1,7 +1,7 @@
 using MediatR;
 using Application.Common.Reponses;
 
-public class GetLessonQuestionsR : IRequest<SingleResponse>
+public class GetExerciseQuestionsR : IRequest<SingleResponse>
 {
-    public Guid LessonId { get; set; }
+    public Guid ExerciseId { get; set; }
 }

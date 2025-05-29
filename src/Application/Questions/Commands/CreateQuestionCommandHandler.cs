@@ -1,9 +1,8 @@
 using MediatR;
-using Application.Common.Models;
-using System.Collections.Generic;
 using Infrastructure.Data;
 using Domain.Entities;
 using Application.Common.Reponses;
+using Application.Request.Question;
 namespace Application.Questions.Commands;
 
 
@@ -19,33 +18,53 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionR, Sin
     public async Task<SingleResponse> Handle(CreateQuestionR request, CancellationToken cancellationToken)
     {
         var res = new SingleResponse();
-        var question = new Question
-        {
-            Id = Guid.NewGuid(),
-            LessonId = request.LessonId,
-            Text = request.Text,
-            CreatedAt = DateTime.UtcNow
-        };
 
-        if (request.Options != null && request.Options.Count > 0)
+        if (request.ExerciseId == Guid.Empty)
+            return res.SetError("Invalid exercise ID");
+
+        var exercise = await _context.Exercises.FindAsync(new object[] { request.ExerciseId }, cancellationToken);
+        var lessonId = request.LessonId;
+        if (exercise == null)
+            return res.SetError("Exercise not found");
+
+        if (request.Questions.Count == 1)
         {
-            foreach (var o in request.Options)
+            var question = Question.Create(request.ExerciseId, lessonId, request.Questions[0].Text, request.LessonType, 0);
+            await _context.Questions.AddAsync(question, cancellationToken);
+
+            foreach (var optionDto in request.Questions[0].Options)
             {
-                var option = new Option
-                {
-                    Id = Guid.NewGuid(),
-                    Text = o.Text,
-                    IsCorrect = o.IsCorrect,
-                    QuestionId = question.Id,
-                    Order = 0,
-                    CreatedAt = DateTime.UtcNow
-                };
-                question.Options.Add(option);
+                var option = Option.Create(question.Id, optionDto.Text, optionDto.IsCorrect, 0);
+                await _context.Options.AddAsync(option, cancellationToken);
             }
+
+            await _context.SaveChangesAsync(cancellationToken);
+            var newExercise = await _context.Exercises.FindAsync(new object[] { request.ExerciseId }, cancellationToken);
+            return res.SetSuccess(newExercise.ToViewDto());
+        }
+        else
+        {
+
+            foreach (var questionDto in request.Questions)
+            {
+                var question = Question.Create(request.ExerciseId, lessonId, questionDto.Text, request.LessonType, request.Questions.IndexOf(questionDto));
+                await _context.Questions.AddAsync(question, cancellationToken);
+
+                if (questionDto.Options != null && questionDto.Options.Count > 0)
+                {
+                    foreach (var optionDto in questionDto.Options)
+                    {
+                        var option = Option.Create(question.Id, optionDto.Text, optionDto.IsCorrect, questionDto.Options.IndexOf(optionDto));
+                        await _context.Options.AddAsync(option, cancellationToken);
+                    }
+
+                }
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            var newExercise = await _context.Exercises.FindAsync(new object[] { request.ExerciseId }, cancellationToken);
+            return res.SetSuccess(newExercise.ToViewDto());
         }
 
-        _context.Questions.Add(question);
-        await _context.SaveChangesAsync(cancellationToken);
-        return res.SetSuccess(question);
+
     }
-} 
+}

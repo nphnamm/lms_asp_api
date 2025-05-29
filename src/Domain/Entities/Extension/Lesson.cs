@@ -16,7 +16,7 @@ partial class Lesson
 
     }
 
-    public static Lesson Create(Guid courseId, string title, string description, string content, int order, bool isPublished, int status, LessonType type, int duration, string videoUrl, string resources, List<string> keywords, decimal completionRate, int viewCount, string notes, bool isPreview)
+    public static Lesson Create(Guid courseId, string title, string description, string content, int order, bool isPublished, int status, LessonType type, int duration, string videoUrl, string resources = null, List<string> keywords = null, decimal? completionRate = null, int? viewCount = null, string notes = null, bool isPreview = false)
     {
         var res = new Lesson
         {
@@ -34,11 +34,11 @@ partial class Lesson
             Type = type,
             Duration = duration,
             VideoUrl = videoUrl,
-            Resources = resources,
-            Keywords = keywords,
-            CompletionRate = completionRate,
-            ViewCount = viewCount,
-            Notes = notes,
+            Resources = resources ?? null,
+            Keywords = keywords ?? null,
+            CompletionRate = completionRate ?? 0,
+            ViewCount = viewCount ?? 0,
+            Notes = notes ?? null,
             IsPreview = isPreview
             
         };
@@ -136,7 +136,8 @@ partial class Lesson
             CompletionRate = CompletionRate,
             ViewCount = ViewCount,
             Notes = Notes,
-            IsPreview = IsPreview
+            IsPreview = IsPreview,
+            TotalExercises = Exercises.Count
         };
     }
 
@@ -168,7 +169,8 @@ partial class Lesson
         public int ViewCount { get; set; }
         public string? Notes { get; set; }
         public bool IsPreview { get; set; }
-
+        public int TotalExercises { get; set; }
+        public List<Exercise> Exercises { get; set; } = new List<Exercise>();
         public LessonType Type { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

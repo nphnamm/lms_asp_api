@@ -1,59 +1,43 @@
-
-
-using System.Text.Json.Serialization;
-using Domain.Entities;
-
 namespace Domain.Entities;
 
 
-partial class CourseProgress
+partial class QuestionHistory   
 {
     #region -- Methods --
 
     /// <summary>
     /// Initialize
     /// </summary>
-    public CourseProgress()
+    public QuestionHistory()
     {
 
     }
     
-    public static CourseProgress Create(Guid courseId, Guid userId, DateTime learningDate, CourseProgressStatus status, bool isCompleted)
+
+    public static QuestionHistory Create(Guid questionId, Guid exerciseHistoryId, bool isCorrect) 
     {
-        var res = new CourseProgress
+        var res = new QuestionHistory
         {
             Id = Guid.NewGuid(),
-            CourseId = courseId,
-            UserId = userId,
+            QuestionId = questionId,
+            ExerciseHistoryId = exerciseHistoryId,
+            AnsweredAt = DateTime.UtcNow,
+            IsCorrect = isCorrect,
+            Status = 0,
             IsDeleted = false,
-            IsCompleted = isCompleted,
-            LearningDate = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            Status = status,
-            LastAccessedAt = DateTime.UtcNow,
-            ProgressPercentage = 0,
-            Notes = null,
-            Rating = null,
-            Review = null,
-            CompletionDate = null,
-            TimeSpent = 0,
-            Score = null,
-            CertificateUrl = null,
-            IsFavorite = false,
-            LearningPath = null,
-            ExpiryDate = null,
-            Feedback = null,
+
         };
 
         return res;
     }
 
 
-    public void Update(CourseProgressStatus status, bool isCompleted)
+    public void Update(bool isCorrect, int status)
     {
+        IsCorrect = isCorrect;
         Status = status;
-        IsCompleted = isCompleted;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -104,14 +88,14 @@ partial class CourseProgress
         return new T
         {
             Id = Id,
-            CourseId = CourseId,
-            UserId = UserId,
-            LearningDate = LearningDate,
+            QuestionId = QuestionId,
+            ExerciseHistoryId = ExerciseHistoryId,
+            AnsweredAt = AnsweredAt,
+            IsCorrect = IsCorrect,
             Status = Status,
-            IsCompleted = IsCompleted,
+            IsDeleted = IsDeleted,
             CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt ,
-            IsDeleted = IsDeleted
+            UpdatedAt = UpdatedAt
         };
     }
 
@@ -128,14 +112,14 @@ partial class CourseProgress
         /// 
         /// </summary>
         public Guid Id { get; set; }
-        public Guid CourseId { get; set; }
-        public Guid UserId { get; set; }
-        public DateTime LearningDate { get; set; }
-        public CourseProgressStatus Status { get; set; }
+        public Guid QuestionId { get; set; }
+        public Guid ExerciseHistoryId { get; set; }
+        public DateTime AnsweredAt { get; set; }
+        public bool IsCorrect { get; set; }
+        public int Status { get; set; }
         public bool IsDeleted { get; set; } = false;
-        public bool IsCompleted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     /// <summary>

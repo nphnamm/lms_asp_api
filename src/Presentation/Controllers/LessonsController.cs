@@ -1,14 +1,9 @@
-using System;
-using System.Threading.Tasks;
-using Application.Lessons.Commands;
-using Application.Lessons.Queries;
-using Application.Courses.Queries;
+
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Application.Common.Models;
 using Application.Request.Lesson;
-
+using Application.Common.Reponses;
 namespace Presentation.Controllers;
 
 [ApiController]
@@ -59,12 +54,10 @@ public class LessonsController : BaseController
         return Ok(result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     [Authorize(Roles = "Instructor")]
-    public async Task<IActionResult> UpdateLesson(Guid id, UpdateLessonR command)
+    public async Task<IActionResult> UpdateLesson(UpdateLessonR command)
     {
-        if (id != command.Id)
-            return BadRequest();
 
         var result = await _mediator.Send(command);
         return Ok(result);

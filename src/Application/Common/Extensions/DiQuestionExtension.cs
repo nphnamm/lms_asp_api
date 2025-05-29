@@ -7,6 +7,7 @@ using Application.Common.Reponses;
 using Application.Questions.Commands;
 using Application.Questions.Queries;
 using Application.Request;
+using Application.Request.Question;
 public static class DiQuestionExtension
 {
     #region -- Methods --
@@ -42,7 +43,7 @@ public static class DiQuestionExtension
     public static void AddQuestionQueries(this MediatRServiceConfiguration p, ServiceLifetime life = ServiceLifetime.Scoped)
     {
         p.AddBehavior<IRequestHandler<GetQuestionR, SingleResponse>, GetQuestionQueryHandler>(life);
-        p.AddBehavior<IRequestHandler<GetLessonQuestionsR, SingleResponse>, GetLessonQuestionsQueryHandler>(life);
+        p.AddBehavior<IRequestHandler<GetExerciseQuestionsR, SingleResponse>, GetExerciseQuestionsQueryHandler>(life);
     }
 
     #endregion

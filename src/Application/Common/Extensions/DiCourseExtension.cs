@@ -31,6 +31,8 @@ public static class DiCourseExtension
         p.AddBehavior<IRequestHandler<CreateCourseR, SingleResponse>, CreateCourseCommandHandler>(life);
         p.AddBehavior<IRequestHandler<UpdateCourseR, SingleResponse>, UpdateCourseCommandHandler>(life);
         p.AddBehavior<IRequestHandler<DeleteCourseR, SingleResponse>, DeleteCourseCommandHandler>(life);
+
+        p.AddBehavior<IRequestHandler<EnrollInCourseR, SingleResponse>, EnrollInCourseCommandHandler>(life);
     }
 
     /// <summary>

@@ -20,12 +20,12 @@ public class GetExerciseQueryHandler : IRequestHandler<GetExerciseR, SingleRespo
         var res = new SingleResponse();
         var exercise = await _context.Exercises
             .Include(e => e.Questions)
-            .Include(e => e.Options)
+                .ThenInclude(q => q.Options)
             .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
 
         if (exercise == null)
             return res.SetError("Exercise not found");
 
-        return res.SetSuccess(exercise);
+        return res.SetSuccess(exercise.ToViewDto());
     }
 } 

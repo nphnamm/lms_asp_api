@@ -50,10 +50,10 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonR, SingleR
             (LessonType)request.Type,
             request.Duration,
             request.VideoUrl,
-            request.Quiz,
-            request.Tags,   
-            request.Rating,
-            request.TotalEnrollments,
+            request.Resources,
+            request.Keywords,
+            request.CompletionRate ?? 0,
+            request.ViewCount ?? 0,
             request.Notes,
             request.IsPreview
         );

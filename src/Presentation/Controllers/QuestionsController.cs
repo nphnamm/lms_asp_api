@@ -1,17 +1,10 @@
 using Application.Questions.Commands;
-using Application.Questions.Queries;
-using Application.Lessons.Queries;
-using Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using Application.Courses.Queries;
 
+using Application.Request.Question;
+using Application.Request.Exercise;
 namespace Presentation.Controllers;
 
 [ApiController]
@@ -28,17 +21,17 @@ public class QuestionsController : BaseController
         _logger = logger;
     }
 
-    [HttpGet("lesson/{lessonId}")]
-    public async Task<IActionResult> GetLessonQuestions(Guid lessonId)
+    [HttpGet("exercise/{exerciseId}")]
+    public async Task<IActionResult> GetExerciseQuestions(Guid exerciseId)
     {
         // Get lesson to check access
-        var lessonQuery = new GetLessonR { Id = lessonId };
-        var lessonResult = await _mediator.Send(lessonQuery);
+        var exerciseQuery = new GetExerciseR { Id = exerciseId };
+        var exerciseResult = await _mediator.Send(exerciseQuery);
         
-        if (lessonResult == null)
+        if (exerciseResult == null)
             return NotFound();
 
-        var query = new GetLessonQuestionsR { LessonId = lessonId };
+        var query = new GetExerciseQuestionsR { ExerciseId = exerciseId };
         var result = await _mediator.Send(query);
         return Ok(result);
     }
@@ -63,16 +56,6 @@ public class QuestionsController : BaseController
         return Ok(result);
     }
 
-    [HttpPost("multiple")]
-    [Authorize(Roles = "Instructor")]
-    public async Task<IActionResult> CreateMultipleQuestions(CreateMultipleQuestionsCommand command)
-    {
-        var result = await _mediator.Send(command);
-        return Ok(result);
-    }
-
-    [HttpPut("{id}")]
-    [Authorize(Roles = "Instructor")]
     public async Task<IActionResult> UpdateQuestion(Guid id, UpdateQuestionR command)
     {
         if (id != command.Id)

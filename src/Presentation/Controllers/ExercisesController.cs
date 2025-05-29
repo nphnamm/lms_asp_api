@@ -61,12 +61,11 @@ public class ExercisesController : BaseController
         return Ok(result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     [Authorize(Roles = "Instructor")]
     public async Task<IActionResult> UpdateExercise(Guid id, [FromBody] UpdateExerciseR command)
     {
-        if (id != command.Id)
-            return BadRequest();
+
 
         var result = await _mediator.Send(command);
         return Ok(result);
@@ -77,6 +76,13 @@ public class ExercisesController : BaseController
     public async Task<IActionResult> DeleteExercise(Guid id)
     {
         var command = new DeleteExerciseR { Id = id };
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPost("submit")]
+    public async Task<IActionResult> SubmitExercise(SubmitExerciseR command)
+    {
         var result = await _mediator.Send(command);
         return Ok(result);
     }

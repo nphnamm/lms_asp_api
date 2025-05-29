@@ -1,8 +1,5 @@
-using System.Text.Json.Serialization;
-using Domain.Entities;
 using Domain.Enums;
 namespace Domain.Entities;
-
 
 partial class Exercise
 {
@@ -16,11 +13,12 @@ partial class Exercise
 
     }
 
-    public static Exercise Create(Guid courseId, string title, string content, int order, bool isPublished, ExerciseType type, int status, int timeLimit, decimal passingScore, int retryLimit, bool allowPartialCredit, string feedback, string instructions, decimal weight, bool isGraded, bool showAnswers, DateTime dueDate, string hints, decimal averageScore, int attemptCount)
+    public static Exercise Create(Guid lessonId, string title, string content, int order, bool isPublished, ExerciseType type, int status, int timeLimit, decimal passingScore, int retryLimit, bool allowPartialCredit, string feedback, string instructions, decimal weight, bool isGraded, bool showAnswers, DateTime dueDate, string hints, decimal averageScore, int attemptCount)
     {
         var res = new Exercise
         {
             Id = Guid.NewGuid(),
+            LessonId = lessonId,
             Title = title,
             Content = content,
             Order = order,
@@ -145,7 +143,8 @@ partial class Exercise
             DueDate = DueDate,
             Hints = Hints,
             AverageScore = AverageScore,
-            AttemptCount = AttemptCount
+            AttemptCount = AttemptCount,
+            Questions = Questions.Select(q => q.ToBaseDto<Question.BaseDto>()).ToList()
         };
     }
 
@@ -183,7 +182,8 @@ partial class Exercise
         public string? Hints { get; set; }
         public decimal AverageScore { get; set; }
         public int AttemptCount { get; set; }
-        
+
+        public ICollection<Question.BaseDto> Questions { get; set; } = new List<Question.BaseDto>();
     }
 
     /// <summary>
