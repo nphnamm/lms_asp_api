@@ -25,8 +25,8 @@ public class LessonsController : BaseController
         if (includeUnpublished && !IsInstructor)
             return Forbid();
 
-        var query = new GetCourseLessonsR 
-        { 
+        var query = new GetCourseLessonsR
+        {
             CourseId = courseId,
             IncludeUnpublished = includeUnpublished
         };
@@ -34,14 +34,12 @@ public class LessonsController : BaseController
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetLesson(Guid id)
+    [HttpPatch]
+    public async Task<IActionResult> GetLesson(GetLessonR request)
     {
-        var query = new GetLessonR { Id = id };
-        var result = await _mediator.Send(query);
-        
-        if (result == null)
-            return NotFound();
+
+        var result = await _mediator.Send(request);
+
 
         return Ok(result);
     }
@@ -63,11 +61,11 @@ public class LessonsController : BaseController
         return Ok(result);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
     [Authorize(Roles = "Instructor")]
-    public async Task<IActionResult> DeleteLesson(Guid id)
+    public async Task<IActionResult> DeleteLesson(DeleteLessonR command)
     {
-        var command = new DeleteLessonR { Id = id };
+
         var result = await _mediator.Send(command);
         return Ok(result);
     }

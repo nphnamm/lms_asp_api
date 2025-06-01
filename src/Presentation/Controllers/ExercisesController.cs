@@ -70,12 +70,10 @@ public class ExercisesController : BaseController
         var result = await _mediator.Send(command);
         return Ok(result);
     }
-
-    [HttpDelete("{id}")]
+    [HttpDelete]
     [Authorize(Roles = "Instructor")]
-    public async Task<IActionResult> DeleteExercise(Guid id)
+    public async Task<IActionResult> DeleteExercise(DeleteExerciseR command)
     {
-        var command = new DeleteExerciseR { Id = id };
         var result = await _mediator.Send(command);
         return Ok(result);
     }

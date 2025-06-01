@@ -33,11 +33,10 @@ public class CoursesController : BaseController
         return Ok(courses);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetCourse(Guid id)
+    [HttpPatch]
+    public async Task<IActionResult> GetCourse(GetCourseR request)
     {
-        var query = new GetCourseR { Id = id };
-        var course = await _mediator.Send(query);
+        var course = await _mediator.Send(request);
 
         if (course == null)
             return NotFound();
@@ -106,7 +105,8 @@ public class CoursesController : BaseController
     public async Task<IActionResult> EnrollInCourse(EnrollInCourseR command)
     {
         var res = new SingleResponse();
-        if (command.UserId == Guid.Empty){
+        if (command.UserId == Guid.Empty)
+        {
             res.SetError("User ID not found");
             return Ok(res);
         }

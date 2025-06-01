@@ -109,12 +109,14 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseR, SingleR
         StringBuilder imageUrl = new StringBuilder($"{endpoint}/{bucketName}/");
         Media? media = null;
         var courseId = Guid.Empty;
+        var url = "";
+
 
         // Handle image upload if provided
         if (request.Image != null && request.Image.Length > 0)
         {
             using var stream = request.Image.OpenReadStream();
-            var url = await _fileStorageService.UploadFileAsync(stream, request.Image.FileName, request.Image.ContentType);
+            url = await _fileStorageService.UploadFileAsync(stream, request.Image.FileName, request.Image.ContentType);
             imageUrl.Append(url);
             
             media = Media.Create(

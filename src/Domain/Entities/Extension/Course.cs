@@ -140,7 +140,8 @@ partial class Course
             Syllabus = Syllabus,
             LearningObjectives = LearningObjectives,
             Requirements = Requirements,
-            TargetAudience = TargetAudience
+            TargetAudience = TargetAudience,
+            Lessons = (Lessons ?? new List<Lesson>()).Select(l => l.ToBaseDto<Lesson.BaseDto>()).ToList()
         };
     }
 
@@ -177,6 +178,8 @@ partial class Course
         public string? LearningObjectives { get; set; }
         public string? Requirements { get; set; }
         public string? TargetAudience { get; set; }
+
+        public List<Lesson.BaseDto> Lessons { get; set; } = new List<Lesson.BaseDto>();
 
     }
 

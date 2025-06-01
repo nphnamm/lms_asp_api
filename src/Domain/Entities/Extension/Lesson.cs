@@ -1,6 +1,4 @@
-using System.Text.Json.Serialization;
-using Domain.Entities;
-using Domain.Enums;
+
 namespace Domain.Entities;
 
 
@@ -100,6 +98,7 @@ partial class Lesson
         };
     }
 
+
     /// <summary>
     /// Convert to data transfer object
     /// </summary>
@@ -137,7 +136,8 @@ partial class Lesson
             ViewCount = ViewCount,
             Notes = Notes,
             IsPreview = IsPreview,
-            TotalExercises = Exercises.Count
+            TotalExercises = Exercises.Count,
+            Exercises = (Exercises ?? new List<Exercise>()).Select(e => e.ToBaseDto<Exercise.BaseDto>()).ToList()
         };
     }
 
@@ -170,7 +170,7 @@ partial class Lesson
         public string? Notes { get; set; }
         public bool IsPreview { get; set; }
         public int TotalExercises { get; set; }
-        public List<Exercise> Exercises { get; set; } = new List<Exercise>();
+        public List<Exercise.BaseDto> Exercises { get; set; } = new List<Exercise.BaseDto>();
         public LessonType Type { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -184,12 +184,12 @@ partial class Lesson
 
     }
 
+
     /// <summary>
     /// View
     /// </summary>
     public class ViewDto : BaseDto
     {
-
     }
 
     #endregion
