@@ -29,6 +29,7 @@ public partial class Exercise
     public bool ShowAnswers { get; set; }  // Whether to show answers after submission
     public DateTime? DueDate { get; set; }
     public string? Hints { get; set; }  // JSON string of hints
+    public string? WordBank { get; set; }  // Word bank for fill-in-the-blank exercises
     public decimal AverageScore { get; set; }
     public int AttemptCount { get; set; }
     

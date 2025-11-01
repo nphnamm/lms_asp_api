@@ -24,6 +24,7 @@ public class UpdateExerciseR : IRequest<SingleResponse>
     public bool? ShowAnswers { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Hints { get; set; }
+    public string? WordBank { get; set; }
     public decimal? AverageScore { get; set; }
     public int? AttemptCount { get; set; }
 } 

@@ -8,4 +8,6 @@ public interface IFileStorageService
     Task<Stream> DownloadFileAsync(string fileName);
     Task DeleteFileAsync(string fileName);
     string GetFileUrl(string fileName);
+    string GetDirectMinioUrl(string fileName);
+    Task<string> GetPresignedUrlAsync(string fileName, int expiry = 3600);
 } 

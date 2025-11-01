@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using Application.Request.Question;
 using Application.Request.Exercise;
+using Application.Common.Reponses;
+using Domain.Entities;
 namespace Presentation.Controllers;
 
 [ApiController]
@@ -24,16 +26,36 @@ public class QuestionsController : BaseController
     [HttpGet("exercise/{exerciseId}")]
     public async Task<IActionResult> GetExerciseQuestions(Guid exerciseId)
     {
-        // Get lesson to check access
+        // Get exercise to check access and get exercise details
         var exerciseQuery = new GetExerciseR { Id = exerciseId };
         var exerciseResult = await _mediator.Send(exerciseQuery);
         
-        if (exerciseResult == null)
+        if (exerciseResult == null || !exerciseResult.Succeeded)
             return NotFound();
 
         var query = new GetExerciseQuestionsR { ExerciseId = exerciseId };
         var result = await _mediator.Send(query);
-        return Ok(result);
+        
+        if (result == null || !result.Succeeded)
+            return NotFound();
+
+        // Extract exercise data
+        var exercise = exerciseResult.Data as Exercise.ViewDto;
+        if (exercise == null)
+            return NotFound();
+
+        // Create response with exercise information and questions
+        var response = new SingleResponse();
+        var responseData = new
+        {
+            typeExercise = exercise.Type.ToString(),
+            exerciseId = exercise.Id,
+            exerciseName = exercise.Title,
+            wordBank = exercise.WordBank,
+            data = result.Data
+        };
+
+        return Ok(response.SetSuccess(responseData));
     }
 
     [HttpGet("{id}")]

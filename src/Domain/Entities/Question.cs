@@ -14,6 +14,7 @@ public partial class Question
     public Lesson Lesson { get; set; }
     public ExerciseType Type { get; set; }
     public int Order { get; set; }
+    public string? Explanation { get; set; }
     public ICollection<Option> Options { get; set; } = new List<Option>();
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

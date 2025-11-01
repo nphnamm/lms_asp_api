@@ -100,6 +100,7 @@ partial class Question
             Type = Type,
             Options = Options.Select(o => o.ToBaseDto<Option.BaseDto>()).ToList(),
             Order = Order,
+            Explanation = Explanation,
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt ?? DateTime.UtcNow
         };
@@ -123,6 +124,7 @@ partial class Question
         public ExerciseType Type { get; set; }
         public List<Option.BaseDto> Options { get; set; }
         public int Order { get; set; }
+        public string? Explanation { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

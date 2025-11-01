@@ -28,7 +28,11 @@ public class FilesController : ControllerBase
         using var stream = file.OpenReadStream();
         var fileName = await _fileStorageService.UploadFileAsync(stream, file.FileName, file.ContentType);
         
-        return Ok(new { FileName = fileName, Url = _fileStorageService.GetFileUrl(fileName) });
+        return Ok(new { 
+            FileName = fileName, 
+            ApiUrl = _fileStorageService.GetFileUrl(fileName),
+            DirectUrl = _fileStorageService.GetDirectMinioUrl(fileName)
+        });
     }
 
     [HttpGet("{fileName}")]
@@ -39,9 +43,41 @@ public class FilesController : ControllerBase
             var stream = await _fileStorageService.DownloadFileAsync(fileName);
             return File(stream, "application/octet-stream", fileName);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return NotFound();
+            // Log the specific error for debugging
+            Console.WriteLine($"Error downloading file {fileName}: {ex.Message}");
+            return NotFound($"File '{fileName}' not found or access denied");
+        }
+    }
+
+    [HttpGet("{fileName}/presigned")]
+    public async Task<IActionResult> GetPresignedUrl(string fileName, int expiry = 3600)
+    {
+        try
+        {
+            var presignedUrl = await _fileStorageService.GetPresignedUrlAsync(fileName, expiry);
+            return Ok(new { PresignedUrl = presignedUrl, ExpiresIn = expiry });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating presigned URL for {fileName}: {ex.Message}");
+            return NotFound($"File '{fileName}' not found or access denied");
+        }
+    }
+
+    [HttpGet("{fileName}/direct")]
+    public IActionResult GetDirectUrl(string fileName)
+    {
+        try
+        {
+            var directUrl = _fileStorageService.GetDirectMinioUrl(fileName);
+            return Ok(new { DirectUrl = directUrl });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating direct URL for {fileName}: {ex.Message}");
+            return NotFound($"File '{fileName}' not found");
         }
     }
 

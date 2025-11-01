@@ -56,6 +56,7 @@ public class CreateExerciseCommandHandler : IRequestHandler<CreateExerciseR, Sin
             request.ShowAnswers ?? false,
             request.DueDate ?? DateTime.UtcNow,
             request.Hints ?? null,
+            request.WordBank ?? null,
             0, // Initial average score
             0  // Initial attempt count
         );

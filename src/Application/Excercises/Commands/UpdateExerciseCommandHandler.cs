@@ -45,6 +45,7 @@ public class UpdateExerciseCommandHandler : IRequestHandler<UpdateExerciseR, Sin
         var showAnswers = request.ShowAnswers ?? exercise.ShowAnswers;
         var dueDate = request.DueDate ?? exercise.DueDate;
         var hints = request.Hints ?? exercise.Hints;
+        var wordBank = request.WordBank ?? exercise.WordBank;
         var averageScore = request.AverageScore ?? exercise.AverageScore;
         var attemptCount = request.AttemptCount ?? exercise.AttemptCount;
         exercise.Update(
@@ -65,6 +66,7 @@ public class UpdateExerciseCommandHandler : IRequestHandler<UpdateExerciseR, Sin
             showAnswers,
             dueDate ?? DateTime.UtcNow,
             hints,
+            wordBank,
             averageScore,
             attemptCount
         );

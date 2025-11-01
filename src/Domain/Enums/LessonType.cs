@@ -2,10 +2,22 @@ namespace Domain.Enums;
 
 public enum ExerciseType
 {
-    Text,
     TrueFalse,
+    Text,
     FillInBlank,
     MultipleChoice,
     Matching,
-    Code
-} 
+    FillInBlankOneSentence,
+
+    FillInBlankOneParagraph,
+
+    TrueFalseAndRewrite,
+    SentenceTransformation,
+
+    ErrorCorrection,
+
+    ReadingComprehension,
+
+    SentenceReordering
+
+}

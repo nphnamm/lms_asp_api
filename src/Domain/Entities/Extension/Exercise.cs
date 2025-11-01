@@ -13,7 +13,7 @@ partial class Exercise
 
     }
 
-    public static Exercise Create(Guid lessonId, string title, string content, int order, bool isPublished, ExerciseType type, int status, int timeLimit, decimal passingScore, int retryLimit, bool allowPartialCredit, string feedback, string instructions, decimal weight, bool isGraded, bool showAnswers, DateTime dueDate, string hints, decimal averageScore, int attemptCount)
+    public static Exercise Create(Guid lessonId, string title, string content, int order, bool isPublished, ExerciseType type, int status, int timeLimit, decimal passingScore, int retryLimit, bool allowPartialCredit, string feedback, string instructions, decimal weight, bool isGraded, bool showAnswers, DateTime dueDate, string hints, string wordBank, decimal averageScore, int attemptCount)
     {
         var res = new Exercise
         {
@@ -38,6 +38,7 @@ partial class Exercise
             ShowAnswers = showAnswers,
             DueDate = dueDate,
             Hints = hints,
+            WordBank = wordBank,
             AverageScore = averageScore,
             AttemptCount = attemptCount
         };
@@ -46,7 +47,7 @@ partial class Exercise
     }
 
 
-    public void Update(string title, string content, int order, bool isPublished, ExerciseType type, int status, int timeLimit, decimal passingScore, int retryLimit, bool allowPartialCredit, string feedback, string instructions, decimal weight, bool isGraded, bool showAnswers, DateTime dueDate, string hints, decimal averageScore, int attemptCount)
+    public void Update(string title, string content, int order, bool isPublished, ExerciseType type, int status, int timeLimit, decimal passingScore, int retryLimit, bool allowPartialCredit, string feedback, string instructions, decimal weight, bool isGraded, bool showAnswers, DateTime dueDate, string hints, string wordBank, decimal averageScore, int attemptCount)
     {
         Title = title;
         Content = content;
@@ -66,6 +67,7 @@ partial class Exercise
         ShowAnswers = showAnswers;
         DueDate = dueDate;
         Hints = hints;
+        WordBank = wordBank;
         AverageScore = averageScore;
         AttemptCount = attemptCount;
 
@@ -142,6 +144,7 @@ partial class Exercise
             ShowAnswers = ShowAnswers,
             DueDate = DueDate,
             Hints = Hints,
+            WordBank = WordBank,
             AverageScore = AverageScore,
             AttemptCount = AttemptCount,
             Questions = Questions.Select(q => q.ToBaseDto<Question.BaseDto>()).ToList()
@@ -180,6 +183,7 @@ partial class Exercise
         public bool ShowAnswers { get; set; }
         public DateTime? DueDate { get; set; }
         public string? Hints { get; set; }
+        public string? WordBank { get; set; }
         public decimal AverageScore { get; set; }
         public int AttemptCount { get; set; }
 
